@@ -1,0 +1,1975 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#7B61FF">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="هفت‌خوان">
+  <link rel="manifest" href="./manifest.json">
+  <title>هفت‌خوان دانایی | داشبورد هوشمند مطالعه</title>
+  
+  <link href="https://cdn.jsdelivr.net/gh/rastikerdar/kalameh-font@v1.1.0/dist/font-face.css" rel="stylesheet" type="text/css" />
+  <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+
+  <style>
+    :root {
+      --bg-main: #F4F3F8;
+      --card-white: #FFFFFF;
+      --pastel-purple: #EAE4FF;
+      --pastel-purple-dark: #7B61FF;
+      --pastel-mint: #E0F5EE;
+      --pastel-mint-dark: #1E9E74;
+      --pastel-pink: #FFE8F0;
+      --pastel-pink-dark: #E04F80;
+      --pastel-blue: #E3F0FF;
+      --pastel-blue-dark: #3B82F6;
+      --nav-dark: #26252B;
+      --text-dark: #1E1D24;
+      --text-muted: #7E7C8D;
+      --border-soft: #ECEAF5;
+      --radius-xl: 28px;
+      --radius-lg: 20px;
+      --radius-md: 14px;
+      --shadow-soft: 0 10px 30px -5px rgba(123, 97, 255, 0.07), 0 4px 12px -2px rgba(30, 29, 36, 0.04);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      font-family: 'Kalameh', 'Vazirmatn', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-dark);
+      min-height: 100vh;
+      overflow-x: hidden;
+      padding-bottom: 110px;
+      user-select: none;
+    }
+
+    h1, .font-black { font-weight: 900; letter-spacing: -0.3px; }
+    h2, h3, .font-extrabold { font-weight: 800; }
+    h4, .font-bold { font-weight: 700; }
+    .font-medium { font-weight: 500; }
+
+    .app-shell {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 18px 16px;
+    }
+
+    @media (min-width: 860px) {
+      .app-shell { max-width: 920px; padding: 28px 24px; }
+      .desktop-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; }
+    }
+
+    .top-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+      gap: 8px;
+    }
+
+    .greeting-box h1 { font-size: 1.3rem; color: var(--text-dark); line-height: 1.3; }
+    .greeting-box p { font-size: 0.76rem; color: var(--text-muted); font-weight: 600; }
+
+    .stats-bar { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+
+    .stat-pill {
+      background: var(--card-white);
+      border: 1.5px solid var(--border-soft);
+      border-radius: 999px;
+      padding: 6px 11px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.82rem;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.03);
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .stat-pill:active { transform: scale(0.92); }
+    .stat-pill.streak { color: #EA580C; background: #FFF7ED; border-color: #FFEDD5; }
+    .stat-pill.feather { color: var(--pastel-purple-dark); background: #F5F2FF; border-color: #E4DDFD; }
+    .stat-pill.farr { color: #CA8A04; background: #FEFCE8; border-color: #FEF08A; }
+
+    /* بنر نصب وب‌اپلیکیشن (PWA) */
+    .pwa-install-banner {
+      display: none;
+      background: #26252B;
+      color: #FFFFFF;
+      border-radius: 20px;
+      padding: 12px 16px;
+      margin-bottom: 14px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    }
+    .pwa-install-banner.show { display: flex; }
+
+    .simorgh-card {
+      background: linear-gradient(135deg, #EAE4FF 0%, #F5E8FF 100%);
+      border-radius: var(--radius-xl);
+      padding: 16px 18px;
+      margin-bottom: 18px;
+      position: relative;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid rgba(123, 97, 255, 0.16);
+      overflow: hidden;
+    }
+
+    .simorgh-top { display: flex; align-items: flex-start; gap: 12px; }
+    .simorgh-avatar {
+      width: 46px; height: 46px; border-radius: 16px; background: var(--card-white);
+      display: flex; align-items: center; justify-content: center; font-size: 1.55rem;
+      flex-shrink: 0; box-shadow: 0 6px 15px rgba(123, 97, 255, 0.15);
+      animation: floatBird 3.2s ease-in-out infinite;
+    }
+    @keyframes floatBird { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-4px); } }
+    .simorgh-body { flex: 1; min-height: 54px; }
+    .simorgh-badge {
+      display: inline-block; font-size: 0.7rem; font-weight: 800; color: var(--pastel-purple-dark);
+      background: rgba(255, 255, 255, 0.75); padding: 2px 9px; border-radius: 99px; margin-bottom: 5px;
+    }
+    .simorgh-msg {
+      font-size: 0.84rem; line-height: 1.65; color: #2D264B; font-weight: 600;
+      transition: opacity 0.35s ease, transform 0.35s ease;
+    }
+    .simorgh-msg.fade-out { opacity: 0; transform: translateY(5px); }
+    .simorgh-dots { display: flex; justify-content: center; gap: 6px; margin-top: 10px; }
+    .simorgh-dot {
+      width: 7px; height: 7px; border-radius: 99px; background: rgba(123, 97, 255, 0.28);
+      transition: all 0.3s ease; cursor: pointer;
+    }
+    .simorgh-dot.active { width: 20px; background: var(--pastel-purple-dark); }
+
+    .sub-pills {
+      display: flex; gap: 8px; margin-bottom: 16px; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px;
+    }
+    .sub-pills::-webkit-scrollbar { display: none; }
+    .sub-pill {
+      flex: 1; text-align: center; padding: 10px 10px; border-radius: 999px;
+      font-size: 0.76rem; font-weight: 800; white-space: nowrap;
+      border: 1px solid var(--border-soft); background: var(--card-white); color: var(--text-muted);
+      cursor: pointer; transition: all 0.25s ease;
+    }
+    .sub-pill.active {
+      background: var(--pastel-purple-dark); color: #FFFFFF; border-color: var(--pastel-purple-dark);
+      box-shadow: 0 6px 16px rgba(123, 97, 255, 0.28);
+    }
+
+    .bento-card {
+      background: var(--card-white); border-radius: var(--radius-xl); padding: 20px;
+      margin-bottom: 16px; box-shadow: var(--shadow-soft); border: 1px solid var(--border-soft);
+    }
+    .bento-card.purple { background: var(--pastel-purple); border-color: #DFD5FF; }
+    .bento-card.mint { background: var(--pastel-mint); border-color: #C7EDE0; }
+    .bento-card.pink { background: var(--pastel-pink); border-color: #FFD4E3; }
+    .bento-card.blue { background: var(--pastel-blue); border-color: #CFE4FF; }
+
+    .card-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; gap: 8px; }
+    .card-title { font-size: 0.98rem; font-weight: 800; display: flex; align-items: center; gap: 7px; }
+
+    .course-picker-row { display: flex; align-items: stretch; gap: 8px; width: 100%; margin-bottom: 14px; }
+    .course-picker-row .custom-select-wrapper { flex: 1; min-width: 0; }
+    .add-course-inline-btn {
+      flex-shrink: 0; padding: 0 13px; border-radius: var(--radius-md);
+      border: 1.5px dashed var(--pastel-purple-dark); background: rgba(255, 255, 255, 0.85);
+      color: var(--pastel-purple-dark); font-size: 0.78rem; font-weight: 800; white-space: nowrap;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+    }
+
+    .custom-select-wrapper { position: relative; width: 100%; }
+    .custom-select-trigger {
+      width: 100%; background: rgba(255, 255, 255, 0.92); border: 1.5px solid var(--border-soft);
+      border-radius: var(--radius-md); padding: 11px 14px; font-size: 0.83rem; font-weight: 700;
+      color: var(--text-dark); display: flex; justify-content: space-between; align-items: center;
+      cursor: pointer; gap: 8px;
+    }
+    .custom-select-trigger span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .custom-select-arrow { font-size: 0.7rem; color: var(--pastel-purple-dark); transition: transform 0.25s ease; flex-shrink: 0; }
+    .custom-select-wrapper.open .custom-select-arrow { transform: rotate(180deg); }
+    .custom-select-menu {
+      position: absolute; top: calc(100% + 6px); right: 0; left: 0; background: #FFFFFF;
+      border-radius: var(--radius-md); border: 1.5px solid #E2DCFF;
+      box-shadow: 0 14px 34px rgba(30, 29, 36, 0.14); z-index: 95; max-height: 220px;
+      overflow-y: auto; opacity: 0; visibility: hidden; transform: translateY(-8px) scale(0.98);
+      transition: all 0.22s ease; padding: 6px;
+    }
+    .custom-select-wrapper.open .custom-select-menu { opacity: 1; visibility: visible; transform: translateY(0) scale(1); }
+    .custom-select-option {
+      padding: 10px 12px; border-radius: 10px; font-size: 0.82rem; font-weight: 600;
+      color: var(--text-dark); cursor: pointer; display: flex; align-items: center; justify-content: space-between;
+    }
+    .custom-select-option:hover { background: #F4F1FF; }
+    .custom-select-option.selected { background: var(--pastel-purple); color: var(--pastel-purple-dark); font-weight: 800; }
+
+    .timer-circle-wrap { text-align: center; padding: 12px 0 16px; }
+    .timer-digits { font-size: 3.3rem; font-weight: 900; color: #231B42; letter-spacing: 2px; line-height: 1.1; font-variant-numeric: tabular-nums; }
+    .timer-mode-Switch { display: inline-flex; background: rgba(255,255,255,0.65); padding: 4px; border-radius: 99px; gap: 4px; }
+    .timer-mode-btn {
+      border: none; background: transparent; padding: 5px 11px; border-radius: 99px;
+      font-size: 0.73rem; font-weight: 700; color: #5A527A; cursor: pointer; white-space: nowrap;
+    }
+    .timer-mode-btn.active { background: var(--pastel-purple-dark); color: #fff; }
+
+    .btn-row { display: flex; gap: 8px; width: 100%; }
+    .btn-primary, .btn-secondary {
+      flex: 1; border: none; border-radius: var(--radius-md); padding: 12px 10px;
+      font-size: 0.79rem; font-weight: 800; white-space: nowrap; cursor: pointer;
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s ease;
+      text-decoration: none;
+    }
+    .btn-primary { background: var(--pastel-purple-dark); color: #FFFFFF; box-shadow: 0 6px 16px rgba(123, 97, 255, 0.28); }
+    .btn-secondary { background: rgba(255, 255, 255, 0.9); color: #2D264B; border: 1.5px solid rgba(123, 97, 255, 0.22); }
+    .btn-primary:active, .btn-secondary:active { transform: scale(0.96); }
+
+    .input-clean {
+      width: 100%; background: #F9F8FC; border: 1.5px solid var(--border-soft);
+      border-radius: var(--radius-md); padding: 11px 14px; font-size: 0.84rem;
+      font-weight: 600; color: var(--text-dark); outline: none;
+    }
+    .input-clean:focus { border-color: var(--pastel-purple-dark); background: #FFFFFF; }
+
+    .week-strip { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; text-align: center; margin: 10px 0 6px; }
+    .week-day-item {
+      padding: 8px 4px; border-radius: 16px; background: #F7F6FB;
+      display: flex; flex-direction: column; align-items: center; gap: 5px;
+      font-size: 0.72rem; font-weight: 700; color: var(--text-muted);
+    }
+    .week-day-num {
+      width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center;
+      justify-content: center; font-weight: 800; font-size: 0.78rem; color: var(--text-dark);
+    }
+    .week-day-item.today { background: var(--pastel-purple-dark); color: #FFFFFF; box-shadow: 0 6px 14px rgba(123, 97, 255, 0.32); }
+    .week-day-item.today .week-day-num { background: rgba(255,255,255,0.2); color: #FFFFFF; }
+    .week-day-item.has-study .week-day-num { border: 2px solid var(--pastel-mint-dark); }
+
+    .courses-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .course-tile {
+      border-radius: 22px; padding: 16px 14px; position: relative;
+      display: flex; flex-direction: column; justify-content: space-between;
+      min-height: 132px; box-shadow: 0 6px 18px rgba(0,0,0,0.03);
+    }
+    .course-icon-badge {
+      width: 36px; height: 36px; border-radius: 12px; background: rgba(255,255,255,0.85);
+      display: flex; align-items: center; justify-content: center; font-size: 1.1rem; margin-bottom: 10px;
+    }
+    .course-delete-btn {
+      position: absolute; top: 12px; left: 12px; border: none; background: rgba(255,255,255,0.65);
+      width: 26px; height: 26px; border-radius: 8px; cursor: pointer; font-size: 0.75rem;
+    }
+
+    .floating-nav-wrap {
+      position: fixed; bottom: 18px; left: 0; right: 0; display: flex; justify-content: center; z-index: 90; pointer-events: none;
+    }
+    .floating-nav {
+      pointer-events: auto; background: var(--nav-dark); padding: 8px 12px; border-radius: 999px;
+      display: flex; align-items: center; gap: 10px; box-shadow: 0 16px 35px rgba(20, 19, 26, 0.32);
+    }
+    .nav-btn {
+      width: 46px; height: 46px; border-radius: 50%; border: none; background: transparent;
+      color: #A09EB0; display: flex; align-items: center; justify-content: center; cursor: pointer;
+      transition: all 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .nav-btn svg { width: 22px; height: 22px; stroke: currentColor; stroke-width: 2; fill: none; }
+    .nav-btn.active {
+      background: var(--pastel-purple-dark); color: #FFFFFF; transform: scale(1.06);
+      box-shadow: 0 6px 16px rgba(123, 97, 255, 0.45);
+    }
+
+    .modal-backdrop {
+      position: fixed; inset: 0; background: rgba(24, 22, 35, 0.62); backdrop-filter: blur(7px);
+      z-index: 200; display: none; align-items: center; justify-content: center; padding: 16px;
+    }
+    .modal-backdrop.show { display: flex; }
+    .modal-sheet {
+      background: #FFFFFF; width: 100%; max-width: 430px; border-radius: 28px; padding: 24px 20px;
+      box-shadow: 0 24px 48px rgba(0,0,0,0.22); max-height: 92vh; overflow-y: auto;
+    }
+
+    .heatmap-scroll {
+      overflow-x: auto; padding: 10px 4px; background: #F8F7FC; border-radius: 16px;
+      border: 1px solid var(--border-soft); margin: 12px 0;
+    }
+    .heatmap-grid {
+      display: grid; grid-template-rows: repeat(7, 11px); grid-auto-flow: column;
+      grid-auto-columns: 11px; gap: 3px; width: max-content;
+    }
+    .heat-cell { width: 11px; height: 11px; border-radius: 3px; background: #E6E4F0; }
+    .heat-cell.lvl-1 { background: #C4B5FD; }
+    .heat-cell.lvl-2 { background: #8B5CF6; }
+    .heat-cell.lvl-3 { background: #5B21B6; }
+    .heat-cell.today-ring { outline: 2px solid #EA580C; }
+
+    .tab-page { display: none; }
+    .tab-page.active { display: block; }
+    .sub-section { display: none; }
+    .sub-section.active { display: block; }
+
+    .ring-wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+
+    .Toast-msg {
+      position: fixed; top: 18px; left: 50%; transform: translateX(-50%) translateY(-20px);
+      background: #26252B; color: #fff; padding: 10px 18px; border-radius: 99px;
+      font-size: 0.8rem; font-weight: 700; z-index: 350; opacity: 0; pointer-events: none;
+      transition: all 0.25s ease; box-shadow: 0 10px 25px rgba(0,0,0,0.2); white-space: nowrap;
+    }
+    .Toast-msg.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    .onboard-course-chip {
+      display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px;
+      border-radius: 99px; font-size: 0.8rem; font-weight: 700; margin: 4px;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="toastBox" class="Toast-msg">عملیات با موفقیت انجام شد ✨</div>
+
+  <!-- ۱. مودال شروع اولیه + فعال‌سازی خودکار ۷ روز رایگان -->
+  <div id="onboardingModal" class="modal-backdrop">
+    <div class="modal-sheet">
+      <div style="text-align:center; margin-bottom:14px;">
+        <div style="font-size:2.5rem; margin-bottom:4px;">🦚</div>
+        <h2 class="font-black" style="font-size:1.25rem;">شروع ۷ روز رایگانِ هفت‌خوان!</h2>
+        <p style="font-size:0.78rem; color:var(--text-muted); margin-top:4px;">اطلاعات و درس‌هایت را وارد کن تا میز کار اختصاصی‌ات ساخته شود</p>
+      </div>
+
+      <div style="margin-bottom:12px;">
+        <label style="font-size:0.76rem; font-weight:800; display:block; margin-bottom:5px;">نام و نام خانوادگی:</label>
+        <input type="text" id="onboardName" class="input-clean" placeholder="مثلاً: علی محمدی">
+      </div>
+
+      <div style="margin-bottom:12px;">
+        <label style="font-size:0.76rem; font-weight:800; display:block; margin-bottom:5px;">شماره موبایل (برای ذخیره اشتراک و پشتیبان):</label>
+        <input type="tel" id="onboardPhone" class="input-clean" dir="ltr" style="text-align:right;" placeholder="0912XXXXXXX">
+      </div>
+
+      <div style="margin-bottom:12px;">
+        <label style="font-size:0.76rem; font-weight:800; display:block; margin-bottom:5px;">هدف مطالعه روزانه (ساعت در روز):</label>
+        <input type="number" id="onboardDailyHours" class="input-clean" value="3" min="1" max="16">
+      </div>
+
+      <div style="margin-bottom:14px;">
+        <label style="font-size:0.76rem; font-weight:800; display:block; margin-bottom:5px;">درس‌هایت را یکی‌یکی اضافه کن (حداقل ۱ درس):</label>
+        <div style="display:flex; gap:6px; margin-bottom:8px;">
+          <input type="text" id="onboardCourseInput" class="input-clean" placeholder="نام درس (مثلاً: ریاضی، زیست...)">
+          <button type="button" class="btn-primary" style="flex:0 0 auto; padding:0 14px;" onclick="addOnboardingCourse()">+ افزودن</button>
+        </div>
+        <div id="onboardCoursesList" style="min-height:40px; background:#F8F7FC; border-radius:14px; padding:8px; border:1px dashed #D5CFF0;">
+          <span style="font-size:0.74rem; color:var(--text-muted);">هنوز درسی اضافه نشده است...</span>
+        </div>
+      </div>
+
+      <button type="button" class="btn-primary" id="onboardSubmitBtn" style="width:100%; padding:13px;" onclick="finishOnboarding()">شروع ۷ روز استفاده رایگان 🚀</button>
+    </div>
+  </div>
+
+  <!-- ۲. مودال قفل پایان دوره ۷ روزه و خرید کارت‌به‌کارت (Paywall) -->
+  <div id="paywallModal" class="modal-backdrop">
+    <div class="modal-sheet">
+      <div style="text-align:center; margin-bottom:14px;">
+        <div style="font-size:2.6rem;">🛡️</div>
+        <h2 class="font-black" style="font-size:1.22rem; color:#1E1D24; margin-top:4px;">مهلت ۷ روزه آزمایشی به پایان رسید!</h2>
+        <p id="paywallUserStatsText" style="font-size:0.8rem; color:var(--text-muted); margin-top:6px; line-height:1.6;"></p>
+      </div>
+
+      <div style="background:var(--pastel-purple); padding:14px; border-radius:20px; margin-bottom:14px; border:1.5px solid #D5C8FF;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <span style="font-size:0.78rem; font-weight:800; color:#2D264B;">مبلغ اشتراک دائمی (مادام‌العمر):</span>
+          <span class="font-black" style="font-size:0.95rem; color:var(--pastel-purple-dark);" id="paywallPriceText"></span>
+        </div>
+        <div style="background:#FFFFFF; padding:10px 12px; border-radius:14px; display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+          <span style="font-weight:900; font-size:0.95rem; letter-spacing:1px;" dir="ltr" id="paywallCardNumberText"></span>
+          <button type="button" class="btn-secondary" style="flex:0 0 auto; padding:5px 10px; font-size:0.72rem;" onclick="copyBankCardNumber()">کپی کارت</button>
+        </div>
+        <div style="font-size:0.75rem; font-weight:700; color:#4A3F78; text-align:center;" id="paywallCardOwnerText"></div>
+      </div>
+
+      <div style="font-size:0.76rem; color:var(--text-muted); line-height:1.65; margin-bottom:14px; text-align:center;">
+        پس از واریز، تصویر فیش و شماره موبایل ثبت‌نامی خود (<b id="paywallUserPhoneLabel"></b>) را در تلگرام بفرستید تا اکانت شما در سیستم <b>VIP دائمی</b> شود، سپس دکمه زیر را بزنید:
+      </div>
+
+      <a id="paywallTelegramBtn" href="#" target="_blank" class="btn-primary" style="width:100%; margin-bottom:8px; background:#0088cc;">
+        📤 ارسال تصویر فیش در تلگرام پشتیبان
+      </a>
+      <button type="button" class="btn-secondary" id="checkVipStatusBtn" style="width:100%;" onclick="verifySubscriptionWithServer(true)">
+        🔄 واریز کردم؛ بررسی و باز کردن قفل
+      </button>
+    </div>
+  </div>
+
+  <!-- ۳. مودال یادآوری افزودن مبحث به مرور بعد از تایمر -->
+  <div id="postStudyModal" class="modal-backdrop">
+    <div class="modal-sheet">
+      <div style="text-align:center; margin-bottom:14px;">
+        <div style="font-size:2.3rem;">🛡️</div>
+        <h3 class="font-black" style="font-size:1.15rem; margin-top:4px;">خسته نباشی پهلوان!</h3>
+        <p id="postStudySummaryText" style="font-size:0.8rem; color:var(--text-muted); margin-top:4px;"></p>
+      </div>
+      <div style="background:var(--pastel-purple); padding:14px; border-radius:18px; margin-bottom:14px;">
+        <p style="font-size:0.8rem; font-weight:700; color:#2D264B; margin-bottom:8px;">
+          آیا در این نوبت، مبحثی را کامل خواندی؟ اضافه‌اش کن تا طبق منحنی فراموشی (۱، ۳، ۷ و ۳۰ روز بعد) یادآوری شود:
+        </p>
+        <input type="text" id="postStudyTopicInput" class="input-clean" style="background:#fff;" placeholder="نام مبحث یا فصل (مثلاً: فصل ۲ مشتق)">
+      </div>
+      <div class="btn-row">
+        <button type="button" class="btn-primary" onclick="confirmPostStudyReview(true)">+ ثبت در چرخه مرور</button>
+        <button type="button" class="btn-secondary" onclick="confirmPostStudyReview(false)">فعلاً نه، رد شدن</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ۴. مودال راهنمای ۳ آیکون بالا (سبک دولینگو + تقویم ۳۶۵ مربعی زنجیره) -->
+  <div id="topStatModal" class="modal-backdrop" onclick="if(event.target===this) closeTopStatModal()">
+    <div class="modal-sheet" id="topStatModalContent"></div>
+  </div>
+
+  <!-- بدنه اصلی داشبورد -->
+  <div class="app-shell">
+    
+    <!-- بنر هوشمند نصب وب‌اپلیکیشن (PWA) -->
+    <div id="pwaInstallBanner" class="pwa-install-banner">
+      <div style="font-size:0.78rem; font-weight:700;">
+        📲 نصب «هفت‌خوان» روی صفحه اصلی گوشی (اجرای تمام‌صفحه و آفلاین)
+      </div>
+      <button type="button" class="btn-primary" style="flex:0 0 auto; padding:7px 12px; font-size:0.75rem;" onclick="triggerPwaInstall()">نصب اپ</button>
+    </div>
+
+    <header class="top-header">
+      <div class="greeting-box">
+        <h1 id="userGreetingTitle">سفرِ داناییِ تو</h1>
+        <p id="todayPersianDate">امروز</p>
+      </div>
+
+      <div class="stats-bar">
+        <div class="stat-pill streak" onclick="openTopStatModal('streak')">
+          <span>🔥</span>
+          <span id="headerStreakCount">0</span>
+        </div>
+        <div class="stat-pill feather" onclick="openTopStatModal('feather')">
+          <span>🪶</span>
+          <span id="headerFeatherCount">1</span>
+        </div>
+        <div class="stat-pill farr" onclick="openTopStatModal('farr')">
+          <span>✨</span>
+          <span id="headerFarrCount">0</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- اسلایدر خودکار پیام‌های سیمرغ دانا -->
+    <section class="simorgh-card" id="simorghCardBox">
+      <div class="simorgh-top">
+        <div class="simorgh-avatar">🦚</div>
+        <div class="simorgh-body">
+          <span class="simorgh-badge" id="simorghConditionBadge">پیامِ سیمرغ دانا</span>
+          <p class="simorgh-msg" id="simorghMessageText">در حال بررسی وضعیت نبرد امروز تو...</p>
+        </div>
+      </div>
+      <div class="simorgh-dots" id="simorghDotsContainer"></div>
+    </section>
+
+    <!-- ==================== تب ۱: میز کار امروز ==================== -->
+    <main id="tab-home" class="tab-page active">
+      <div class="sub-pills">
+        <button class="sub-pill active" onclick="switchHomeSub('focus', this)">⏱️ تایمر و ثبت مطالعه</button>
+        <button class="sub-pill" onclick="switchHomeSub('reviews', this)">🧠 برنامه و مرور امروز</button>
+        <button class="sub-pill" onclick="switchHomeSub('goal', this)">🎯 هدف ماهانه</button>
+      </div>
+
+      <div id="home-sub-focus" class="sub-section active">
+        <div class="desktop-grid">
+          <div class="bento-card purple">
+            <div class="card-head">
+              <div class="card-title">⚔️ میدانِ تمرکز</div>
+              <div class="timer-mode-Switch">
+                <button class="timer-mode-btn active" id="modeBtnTimer" onclick="setStudyInputMode('timer')">تایمر زنده</button>
+                <button class="timer-mode-btn" id="modeBtnManual" onclick="setStudyInputMode('manual')">ثبت دستی</button>
+              </div>
+            </div>
+
+            <div class="course-picker-row">
+              <div class="custom-select-wrapper" id="studyCourseSelectWrap">
+                <div class="custom-select-trigger" onclick="toggleCustomDropdown('studyCourseSelectWrap')">
+                  <span id="studyCourseSelectedLabel">انتخاب درس...</span>
+                  <span class="custom-select-arrow">▼</span>
+                </div>
+                <div class="custom-select-menu" id="studyCourseOptionsList"></div>
+              </div>
+              <button type="button" class="add-course-inline-btn" onclick="quickAddCoursePrompt()">+ درس</button>
+            </div>
+
+            <div id="liveTimerPanel">
+              <div style="display:flex; justify-content:center; gap:6px; margin-bottom:4px;">
+                <button class="timer-mode-btn active" onclick="setTimerPreset(25, this)">پومودورو ۲۵</button>
+                <button class="timer-mode-btn" onclick="setTimerPreset(50, this)">عمیق ۵۰</button>
+                <button class="timer-mode-btn" onclick="setTimerPreset(0, this)">کرنومتر آزاد</button>
+              </div>
+
+              <div class="timer-circle-wrap">
+                <div class="timer-digits" id="timerDisplay">25:00</div>
+                <p style="font-size:0.75rem; color:#5A527A; font-weight:600; margin-top:4px;" id="timerSubStatus">آماده برای شروع مطالعه</p>
+              </div>
+
+              <div class="btn-row">
+                <button type="button" class="btn-primary" id="startTimerBtn" onclick="toggleTimerRun()">شروع نبرد تمرکز</button>
+                <button type="button" class="btn-secondary" onclick="finishAndSaveTimerSession()">ثبت زمان فعلی</button>
+              </div>
+            </div>
+
+            <div id="manualEntryPanel" style="display:none; padding-top:6px;">
+              <label style="font-size:0.78rem; font-weight:800; color:#2D264B; display:block; margin-bottom:6px;">مدت مطالعه (دقیقه):</label>
+              <input type="number" id="manualMinutesInput" class="input-clean" style="background:#fff; margin-bottom:14px;" placeholder="مثلاً: 60" min="1" max="600">
+              <button type="button" class="btn-primary" style="width:100%;" onclick="submitManualStudy()">ثبت در کارنامه امروز ✨</button>
+            </div>
+          </div>
+
+          <div class="bento-card mint">
+            <div class="card-head">
+              <div class="card-title">🎧 صدای محیطی تمرکز (آفلاین)</div>
+              <span style="font-size:0.72rem; font-weight:800; color:var(--pastel-mint-dark);">حجم صفر</span>
+            </div>
+            <p style="font-size:0.78rem; color:#235347; margin-bottom:12px; line-height:1.5;">
+              تولید مستقیم امواج صوتی برای حذف سر و صدای محیط بدون نیاز به اینترنت:
+            </p>
+
+            <div class="custom-select-wrapper" id="soundSelectWrap" style="margin-bottom:12px;">
+              <div class="custom-select-trigger" onclick="toggleCustomDropdown('soundSelectWrap')">
+                <span id="soundSelectedLabel">🌧️ باران ملایم و آرامش‌بخش</span>
+                <span class="custom-select-arrow">▼</span>
+              </div>
+              <div class="custom-select-menu">
+                <div class="custom-select-option selected" onclick="selectSoundOption('rain', '🌧️ باران ملایم و آرامش‌بخش', this)">🌧️ باران ملایم و آرامش‌بخش</div>
+                <div class="custom-select-option" onclick="selectSoundOption('brown', '🌊 نویز قهوه‌ای (حذف صدای محیط)', this)">🌊 نویز قهوه‌ای (حذف صدای محیط)</div>
+                <div class="custom-select-option" onclick="selectSoundOption('alpha', '🧠 امواج آلفا (تمرکز عمیق ذهنی)', this)">🧠 امواج آلفا (تمرکز عمیق ذهنی)</div>
+              </div>
+            </div>
+
+            <button type="button" class="btn-primary" id="soundToggleBtn" style="width:100%; background:var(--pastel-mint-dark);" onclick="toggleFocusSound()">پخش صدای تمرکز 🔊</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="home-sub-reviews" class="sub-section">
+        <div class="desktop-grid">
+          <div class="bento-card">
+            <div class="card-head">
+              <div class="card-title">📅 پیوستگی هفته جاری</div>
+              <span style="font-size:0.75rem; color:var(--pastel-purple-dark); font-weight:800;" id="todayStudyMinutesBadge">امروز: ۰ دقیقه</span>
+            </div>
+            <div class="week-strip" id="weekStripContainer"></div>
+          </div>
+
+          <div class="bento-card pink">
+            <div class="card-head">
+              <div class="card-title">🧠 مرورهای واجب امروز (ضد فراموشی)</div>
+              <span id="dueReviewsCountBadge" style="background:#fff; padding:3px 10px; border-radius:99px; font-size:0.75rem; font-weight:800; color:var(--pastel-pink-dark);">0 مورد</span>
+            </div>
+            <div id="todayReviewsList" style="margin-bottom:14px;"></div>
+
+            <div style="background:rgba(255,255,255,0.78); padding:12px; border-radius:16px; border:1px solid rgba(224,79,128,0.2);">
+              <label style="font-size:0.78rem; font-weight:800; color:#7A2042; display:block; margin-bottom:8px;">+ افزودن سریع مبحث جدید به چرخه مرور:</label>
+              <div class="custom-select-wrapper" id="quickReviewCourseWrap" style="margin-bottom:8px;">
+                <div class="custom-select-trigger" onclick="toggleCustomDropdown('quickReviewCourseWrap')">
+                  <span id="quickReviewCourseLabel">انتخاب درس...</span>
+                  <span class="custom-select-arrow">▼</span>
+                </div>
+                <div class="custom-select-menu" id="quickReviewCourseList"></div>
+              </div>
+              <div style="display:flex; gap:6px;">
+                <input type="text" id="quickReviewTopicInput" class="input-clean" style="background:#fff;" placeholder="نام مبحث یا فصل خوانده‌شده...">
+                <button type="button" class="btn-primary" style="flex:0 0 auto; background:var(--pastel-pink-dark); padding:0 14px;" onclick="addTopicToReviewFromHome()">ثبت مرور</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="home-sub-goal" class="sub-section">
+        <div class="bento-card">
+          <div class="ring-wrap">
+            <div style="flex:1;">
+              <span style="font-size:0.74rem; font-weight:800; color:var(--pastel-purple-dark); background:var(--pastel-purple); padding:3px 10px; border-radius:99px;">هدف ماه جاری</span>
+              <h3 class="font-black" style="font-size:1.25rem; margin-top:8px;" id="monthlyGoalTitleText">۰ از ۹۰ ساعت</h3>
+              <p style="font-size:0.78rem; color:var(--text-muted); margin-top:4px;" id="monthlySmartSuggestionText">پیشنهاد هوشمند بر اساس ریتم مطالعه تو</p>
+            </div>
+            <div style="width:86px; height:86px; border-radius:50%; background:conic-gradient(var(--pastel-purple-dark) 0%, #ECEAF5 0%); display:flex; align-items:center; justify-content:center;" id="goalRingVisual">
+              <div style="width:66px; height:66px; background:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:0.95rem; color:var(--pastel-purple-dark);" id="goalPercentText">0%</div>
+            </div>
+          </div>
+
+          <div style="margin-top:16px; padding-top:14px; border-top:1px solid var(--border-soft); display:flex; gap:8px; align-items:center;">
+            <input type="number" id="newMonthlyGoalInput" class="input-clean" placeholder="تغییر هدف ماه (ساعت)...">
+            <button type="button" class="btn-primary" style="flex:0 0 auto; padding:11px 16px;" onclick="updateMonthlyGoal()">بروزرسانی هدف</button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- ==================== تب ۲: درس‌ها و مرور ==================== -->
+    <main id="tab-courses" class="tab-page">
+      <div class="sub-pills">
+        <button class="sub-pill active" onclick="switchCoursesSub('list', this)">📚 درس‌های من</button>
+        <button class="sub-pill" onclick="switchCoursesSub('pace', this)">🧮 ماشین‌حساب امتحان</button>
+        <button class="sub-pill" onclick="switchCoursesSub('add', this)">➕ افزودن درس</button>
+      </div>
+
+      <div id="courses-sub-list" class="sub-section active">
+        <div id="coursesGridContainer" class="courses-grid"></div>
+        <div class="bento-card" style="margin-top:16px;">
+          <div class="card-head">
+            <div class="card-title">🗂️ کل مباحث موجود در چرخه مرور</div>
+          </div>
+          <div id="allReviewsArchiveList"></div>
+        </div>
+      </div>
+
+      <div id="courses-sub-pace" class="sub-section">
+        <div class="bento-card blue">
+          <div class="card-head">
+            <div class="card-title">🧮 ماشین‌حسابِ «چقدر مونده تا برسم؟»</div>
+          </div>
+          <p style="font-size:0.8rem; color:#1E3A8A; margin-bottom:14px;">
+            محاسبه دقیق صفحات روزانه با کنار گذاشتن ۳ روز طلایی آخر برای مرور و جمع‌بندی:
+          </p>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px;">
+            <div>
+              <label style="font-size:0.75rem; font-weight:800; display:block; margin-bottom:5px;">تعداد کل صفحات/درس‌ها:</label>
+              <input type="number" id="pacePagesInput" class="input-clean" style="background:#fff;" placeholder="مثلاً: 240">
+            </div>
+            <div>
+              <label style="font-size:0.75rem; font-weight:800; display:block; margin-bottom:5px;">روزهای باقی‌مانده:</label>
+              <input type="number" id="paceDaysInput" class="input-clean" style="background:#fff;" placeholder="مثلاً: 18">
+            </div>
+          </div>
+          <button type="button" class="btn-primary" style="width:100%; background:var(--pastel-blue-dark);" onclick="calculateExamPace()">محاسبه برنامه روزانه 🎯</button>
+          <div id="paceResultBox" style="display:none; margin-top:14px; background:#fff; padding:14px; border-radius:16px; font-size:0.84rem; font-weight:700; color:#1E3A8A; line-height:1.7;"></div>
+        </div>
+      </div>
+
+      <div id="courses-sub-add" class="sub-section">
+        <div class="bento-card">
+          <div class="card-head">
+            <div class="card-title">➕ تعریف درس یا واحد جدید</div>
+          </div>
+          <div style="margin-bottom:12px;">
+            <label style="font-size:0.78rem; font-weight:800; display:block; margin-bottom:6px;">نام درس:</label>
+            <input type="text" id="newCourseNameInput" class="input-clean" placeholder="مثلاً: فیزیک، ادبیات، ریاضی عمومی...">
+          </div>
+          <div style="margin-bottom:16px;">
+            <label style="font-size:0.78rem; font-weight:800; display:block; margin-bottom:6px;">رنگ کارت پاستلی:</label>
+            <div class="custom-select-wrapper" id="courseColorSelectWrap">
+              <div class="custom-select-trigger" onclick="toggleCustomDropdown('courseColorSelectWrap')">
+                <span id="courseColorSelectedLabel">🟣 یاسی پاستلی</span>
+                <span class="custom-select-arrow">▼</span>
+              </div>
+              <div class="custom-select-menu">
+                <div class="custom-select-option selected" onclick="selectCourseColorOption('purple', '🟣 یاسی پاستلی', this)">🟣 یاسی پاستلی</div>
+                <div class="custom-select-option" onclick="selectCourseColorOption('mint', '🟢 نعنایی پاستلی', this)">🟢 نعنایی پاستلی</div>
+                <div class="custom-select-option" onclick="selectCourseColorOption('pink', '🌸 صورتی پاستلی', this)">🌸 صورتی پاستلی</div>
+                <div class="custom-select-option" onclick="selectCourseColorOption('blue', '🔵 آبی پاستلی', this)">🔵 آبی پاستلی</div>
+              </div>
+            </div>
+          </div>
+          <button type="button" class="btn-primary" style="width:100%;" onclick="createNewCourseFromTab()">افزودن به درس‌های من ✨</button>
+        </div>
+      </div>
+    </main>
+
+    <!-- ==================== تب ۳: پرامپت‌ساز هوش مصنوعی ==================== -->
+    <main id="tab-ai" class="tab-page">
+      <div class="bento-card purple">
+        <div class="card-head">
+          <div class="card-title">🤖 مهندس پرامپتِ درس و دانشگاه</div>
+          <span style="font-size:0.7rem; font-weight:800; background:#fff; color:var(--pastel-purple-dark); padding:3px 9px; border-radius:99px;">Mega-Prompts</span>
+        </div>
+        <p style="font-size:0.79rem; color:#3B3263; margin-bottom:14px; line-height:1.6;">
+          نام مبحث و سناریوی دلخواهت را انتخاب کن تا یک پرامپت مهندسی‌شده و جامع ساخته شود:
+        </p>
+
+        <div style="margin-bottom:12px;">
+          <label style="font-size:0.76rem; font-weight:800; display:block; margin-bottom:5px;">۱. نام درس و مبحث دقیق:</label>
+          <input type="text" id="aiTopicInput" class="input-clean" style="background:#fff;" placeholder="مثلاً: زیست‌شناسی - تنفس سلولی" oninput="generateMegaPromptPreview()">
+        </div>
+
+        <div style="margin-bottom:12px;">
+          <label style="font-size:0.76rem; font-weight:800; display:block; margin-bottom:5px;">۲. مقطع تحصیلی تو:</label>
+          <div class="custom-select-wrapper" id="aiLevelSelectWrap">
+            <div class="custom-select-trigger" onclick="toggleCustomDropdown('aiLevelSelectWrap')">
+              <span id="aiLevelSelectedLabel">🎓 دبیرستان و کنکور</span>
+              <span class="custom-select-arrow">▼</span>
+            </div>
+            <div class="custom-select-menu">
+              <div class="custom-select-option" onclick="selectAiLevel('متوسطه اول (راهنمایی)', '🎒 متوسطه اول (راهنمایی)', this)">🎒 متوسطه اول (راهنمایی)</div>
+              <div class="custom-select-option selected" onclick="selectAiLevel('دبیرستان و کنکور', '🎓 دبیرستان و کنکور', this)">🎓 دبیرستان و کنکور</div>
+              <div class="custom-select-option" onclick="selectAiLevel('دانشگاه و کارشناسی', '🏛️ دانشگاه و کارشناسی', this)">🏛️ دانشگاه و کارشناسی</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-bottom:14px;">
+          <label style="font-size:0.76rem; font-weight:800; display:block; margin-bottom:5px;">۳. نوع پرامپت تخصصی:</label>
+          <div class="custom-select-wrapper" id="aiTemplateSelectWrap">
+            <div class="custom-select-trigger" onclick="toggleCustomDropdown('aiTemplateSelectWrap')">
+              <span id="aiTemplateSelectedLabel">🧠 ۱. آموزش عمیق ۳ سطحی به روش فاینمن</span>
+              <span class="custom-select-arrow">▼</span>
+            </div>
+            <div class="custom-select-menu">
+              <div class="custom-select-option selected" onclick="selectAiTemplate('feynman', '🧠 ۱. آموزش عمیق ۳ سطحی به روش فاینمن', this)">🧠 ۱. آموزش عمیق ۳ سطحی به روش فاینمن</div>
+              <div class="custom-select-option" onclick="selectAiTemplate('exam', '📝 ۲. طراح سوال و تست استاندارد با دام آموزشی', this)">📝 ۲. طراح سوال و تست استاندارد با دام آموزشی</div>
+              <div class="custom-select-option" onclick="selectAiTemplate('summary', '⚡ ۳. خلاصه‌ساز و نقشه ذهنی شب امتحان', this)">⚡ ۳. خلاصه‌ساز و نقشه ذهنی شب امتحان</div>
+              <div class="custom-select-option" onclick="selectAiTemplate('mnemonic', '🔐 ۴. تکنیک رمزگردانی و یادیار (حفظیات سخت)', this)">🔐 ۴. تکنیک رمزگردانی و یادیار (حفظیات سخت)</div>
+              <div class="custom-select-option" onclick="selectAiTemplate('socratic', '🦉 ۵. معلم خصوصی رفع اشکال به روش سقراطی', this)">🦉 ۵. معلم خصوصی رفع اشکال به روش سقراطی</div>
+              <div class="custom-select-option" onclick="selectAiTemplate('planner', '⏳ ۶. برنامه‌ریز فشرده نجات در دقایق نود', this)">⏳ ۶. برنامه‌ریز فشرده نجات در دقایق نود</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="background:#1E1D24; color:#EAE6FF; padding:14px; border-radius:18px; font-size:0.77rem; line-height:1.75; max-height:210px; overflow-y:auto; margin-bottom:12px; white-space:pre-wrap;" id="megaPromptPreviewBox"></div>
+
+        <button type="button" class="btn-primary" style="width:100%;" onclick="copyMegaPrompt()">📋 کپی پرامپت حرفه‌ای</button>
+      </div>
+    </main>
+
+    <!-- ==================== تب ۴: هفت‌خوان، نمودار، فیدبک و پشتیبان ==================== -->
+    <main id="tab-stats" class="tab-page">
+      <div class="sub-pills">
+        <button class="sub-pill active" onclick="switchStatsSub('myth', this)">👑 هفت‌خوان</button>
+        <button class="sub-pill" onclick="switchStatsSub('chart', this)">📊 نمودار مطالعه</button>
+        <button class="sub-pill" onclick="switchStatsSub('feedback', this)">💬 ارسال فیدبک</button>
+        <button class="sub-pill" onclick="switchStatsSub('backup', this)">💾 پشتیبان</button>
+      </div>
+
+      <div id="stats-sub-myth" class="sub-section active">
+        <div class="bento-card purple">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+            <div>
+              <span style="font-size:0.72rem; font-weight:800; color:var(--pastel-purple-dark);">مقام اساطیری فعلی تو</span>
+              <h3 class="font-black" style="font-size:1.3rem; color:#231B42;" id="currentMythRankTitle">خوان اول: رهجویِ خرد</h3>
+            </div>
+            <div style="font-size:2.2rem;">⚔️</div>
+          </div>
+          <p style="font-size:0.8rem; color:#4A3F78; margin-bottom:10px;" id="currentMythRankDesc"></p>
+          <div style="background:rgba(255,255,255,0.7); height:12px; border-radius:99px; overflow:hidden; margin-bottom:6px;">
+            <div id="mythLevelProgressBar" style="height:100%; width:10%; background:var(--pastel-purple-dark); border-radius:99px; transition:width 0.4s;"></div>
+          </div>
+          <div style="display:flex; justify-content:space-between; font-size:0.74rem; font-weight:800; color:#4A3F78;">
+            <span id="mythFarrCurrentLabel">0 فرّ</span>
+            <span id="mythFarrNextLabel">خوان بعدی: 300 فرّ</span>
+          </div>
+        </div>
+
+        <div class="bento-card">
+          <div class="card-head">
+            <div class="card-title">📜 نقشه کامل هفت‌خوانِ دانایی</div>
+          </div>
+          <div id="sevenTrialsListContainer"></div>
+        </div>
+      </div>
+
+      <div id="stats-sub-chart" class="sub-section">
+        <div class="bento-card">
+          <div class="card-head">
+            <div class="card-title">📊 تفکیک زمان مطالعه هر درس</div>
+            <span style="font-size:0.76rem; font-weight:800; color:var(--pastel-purple-dark);" id="totalAllTimeHoursBadge">کل: ۰ ساعت</span>
+          </div>
+          <div id="coursesBarChartContainer"></div>
+        </div>
+      </div>
+
+      <!-- فرم ارسال مستقیم فیدبک و گزارش باگ به تب دوم گوگل‌شیت -->
+      <div id="stats-sub-feedback" class="sub-section">
+        <div class="bento-card pink">
+          <div class="card-head">
+            <div class="card-title">💬 ارسال پیشنهاد یا گزارش مشکل</div>
+          </div>
+          <p style="font-size:0.79rem; color:#7A2042; margin-bottom:12px; line-height:1.6;">
+            نظرات شما مستقیماً برای طراح برنامه ارسال می‌شود تا در بروزرسانی‌های بعدی اعمال گردد:
+          </p>
+          <div class="custom-select-wrapper" id="fbCategorySelectWrap" style="margin-bottom:10px;">
+            <div class="custom-select-trigger" onclick="toggleCustomDropdown('fbCategorySelectWrap')">
+              <span id="fbCategorySelectedLabel">💡 پیشنهاد فیچر جدید</span>
+              <span class="custom-select-arrow">▼</span>
+            </div>
+            <div class="custom-select-menu">
+              <div class="custom-select-option selected" onclick="selectFbCategory('پیشنهاد فیچر جدید', '💡 پیشنهاد فیچر جدید', this)">💡 پیشنهاد فیچر جدید</div>
+              <div class="custom-select-option" onclick="selectFbCategory('گزارش باگ یا مشکل', '🐞 گزارش باگ یا مشکل', this)">🐞 گزارش باگ یا مشکل</div>
+              <div class="custom-select-option" onclick="selectFbCategory('نظر کلی درباره برنامه', '❤️ نظر کلی درباره برنامه', this)">❤️ نظر کلی درباره برنامه</div>
+            </div>
+          </div>
+          <textarea id="feedbackMessageInput" class="input-clean" rows="4" style="background:#fff; margin-bottom:12px; resize:none;" placeholder="هر پیشنهاد، انتقاد یا مشکلی در برنامه دیدید اینجا بنویسید..."></textarea>
+          <button type="button" class="btn-primary" id="sendFeedbackBtn" style="width:100%; background:var(--pastel-pink-dark);" onclick="submitUserFeedbackToSheet()">ارسال مستقیم فیدبک 🚀</button>
+        </div>
+      </div>
+
+      <div id="stats-sub-backup" class="sub-section">
+        <div class="bento-card mint">
+          <div class="card-head">
+            <div class="card-title">💾 انتقال و پشتیبان‌گیری آفلاین</div>
+          </div>
+          <p style="font-size:0.8rem; color:#235347; margin-bottom:14px; line-height:1.6;">
+            تمام اطلاعات شما روی حافظه همین دستگاه ذخیره می‌شود. برای اطمینان از عدم حذف اطلاعات، فایل پشتیبان تهیه کنید:
+          </p>
+          <div class="btn-row">
+            <button type="button" class="btn-primary" style="background:var(--pastel-mint-dark);" onclick="exportUserDataJson()">دانلود فایل پشتیبان 📥</button>
+            <button type="button" class="btn-secondary" onclick="document.getElementById('importFileInput').click()">بارگذاری پشتیبان 📤</button>
+            <input type="file" id="importFileInput" accept=".json" style="display:none;" onchange="importUserDataJson(event)">
+          </div>
+        </div>
+      </div>
+    </main>
+
+  </div>
+
+  <!-- منوی کپسولی شناور پایین صفحه -->
+  <div class="floating-nav-wrap">
+    <nav class="floating-nav">
+      <button class="nav-btn active" onclick="switchMainTab('home', this)" aria-label="خانه">
+        <svg viewBox="0 0 24 24"><path d="M3 10.5L12 3l9 7.5v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-9z"/><path d="M9 21V12h6v9"/></svg>
+      </button>
+      <button class="nav-btn" onclick="switchMainTab('courses', this)" aria-label="درس‌ها">
+        <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      </button>
+      <button class="nav-btn" onclick="switchMainTab('ai', this)" aria-label="پرامپت‌ساز">
+        <svg viewBox="0 0 24 24"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+      </button>
+      <button class="nav-btn" onclick="switchMainTab('stats', this)" aria-label="هفت‌خوان و آمار">
+        <svg viewBox="0 0 24 24"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+      </button>
+    </nav>
+  </div>
+
+  <script>
+    /* ============================================================================
+       تنظیمات اختصاصی مدیر محصول (شماره کارت، مبلغ، آیدی تلگرام و لینک گوگل‌شیت)
+       ============================================================================ */
+    const ADMIN_CONFIG = {
+      GOOGLE_SHEET_URL: "PASTE_YOUR_GOOGLE_SCRIPT_EXEC_URL_HERE", // لینک اسکریپت گوگل‌شیت را اینجا بگذارید
+      SUBSCRIPTION_PRICE: "۱۹۹,۰۰۰ تومان",
+      BANK_CARD_NUMBER: "6037-9975-XXXX-XXXX",
+      BANK_CARD_OWNER: "به نام: نام و نام خانوادگی شما",
+      ADMIN_TELEGRAM_ID: "Your_Telegram_ID", // بدون علامت @
+      TRIAL_DAYS: 7
+    };
+
+    const STORAGE_KEY = 'haftkhan_study_v4_pwa';
+
+    const SEVEN_TRIALS = [
+      { level: 1, name: 'خوان اول: رهجویِ خرد', minFarr: 0, maxFarr: 300, desc: 'آغازگرِ راه دانایی که شمشیر اراده را برای نبرد با تنبلی از نیام کشیده است.' },
+      { level: 2, name: 'خوان دوم: کمانگیرِ آرش', minFarr: 300, maxFarr: 1000, desc: 'کسی که تمام تمرکزش را همچون تیرِ آرش به سوی هدف نشانه گرفته است.' },
+      { level: 3, name: 'خوان سوم: هم‌نبردِ سهراب', minFarr: 1000, maxFarr: 2500, desc: 'چابک، پرانرژی و بی‌وقفه در حال پیشروی در فصل‌ها و مباحث.' },
+      { level: 4, name: 'خوان چهارم: پرورده‌ی سیمرغ (زال)', minFarr: 2500, maxFarr: 5000, desc: 'کسی که رازِ مرور هوشمند و شکست دادنِ دیو فراموشی را آموخته است.' },
+      { level: 5, name: 'خوان پنجم: یلِ رویین‌تن (اسفندیار)', minFarr: 5000, maxFarr: 10000, desc: 'شکست‌ناپذیر در برابر خستگی و استرس امتحانات سنگین.' },
+      { level: 6, name: 'خوان ششم: جهان‌پهلوان (رستم)', minFarr: 10000, maxFarr: 20000, desc: 'فاتحِ میدان‌های سخت و استادِ مطلقِ نظم و پیوستگی.' },
+      { level: 7, name: 'خوان هفتم: جامِ جم (حکیم فرزانه)', minFarr: 20000, maxFarr: 999999, desc: 'قله‌نشینِ دانایی که گنجینه‌ی دانش را در جامِ ذهنش جاودانه کرده است.' }
+    ];
+
+    let state = {
+      onboarded: false,
+      userName: '',
+      userPhone: '',
+      deviceId: '',
+      accountStatus: 'Trial', // Trial | VIP | Blocked
+      installDate: getTodayIso(),
+      farr: 0,
+      feathers: 1,
+      streak: 0,
+      lastStudyDate: null,
+      monthlyGoalHours: 90,
+      selectedCourseId: null,
+      newCourseColor: 'purple',
+      courses: [],
+      studyHistory: {},
+      reviews: [],
+      telemetry: {
+        tabClicks: { home: 1, courses: 0, ai: 0, stats: 0 },
+        timerSessions: 0,
+        manualSessions: 0,
+        promptCopies: 0,
+        lastPromptType: 'feynman'
+      }
+    };
+
+    let onboardingTempCourses = [];
+    let lastCompletedCourseId = null;
+    let selectedFeedbackCategory = 'پیشنهاد فیچر جدید';
+
+    function getTodayIso() {
+      const now = new Date();
+      return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+    }
+
+    function addDaysIso(isoStr, days) {
+      const parts = isoStr.split('-').map(Number);
+      const dt = new Date(parts[0], parts[1] - 1, parts[2]);
+      dt.setDate(dt.getDate() + days);
+      return `${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, '0')}-${String(dt.getDate()).padStart(2, '0')}`;
+    }
+
+    // تولید شناسه یکتا برای دستگاه جهت قفل تک‌کاربره و ضدتقلب
+    function ensureDeviceId() {
+      if (!state.deviceId) {
+        let savedDev = localStorage.getItem('hk_device_fingerprint');
+        if (!savedDev) {
+          savedDev = 'DEV_' + Math.random().toString(36).slice(2, 10).toUpperCase() + '_' + Date.now().toString(36).toUpperCase();
+          localStorage.setItem('hk_device_fingerprint', savedDev);
+        }
+        state.deviceId = savedDev;
+      }
+    }
+
+    function loadAppState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          state = { ...state, ...JSON.parse(raw) };
+        }
+        ensureDeviceId();
+      } catch (e) { console.error(e); }
+    }
+
+    function saveAppState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    /* ============================================================================
+       بررسی دوره ۷ روزه رایگان، ارتباط با گوگل‌شیت و صفحه کارت‌به‌کارت
+       ============================================================================ */
+    function isTrialExpiredLocally() {
+      if (state.accountStatus === 'VIP') return false;
+      if (state.accountStatus === 'Blocked') return true;
+      const startMs = new Date(state.installDate).getTime();
+      const nowMs = new Date(getTodayIso()).getTime();
+      const diffDays = Math.floor((nowMs - startMs) / (1000 * 60 * 60 * 24));
+      return diffDays >= ADMIN_CONFIG.TRIAL_DAYS;
+    }
+
+    function checkSubscriptionGate() {
+      if (!state.onboarded) return;
+      if (isTrialExpiredLocally()) {
+        showPaywallModal();
+      } else {
+        document.getElementById('paywallModal').classList.remove('show');
+      }
+      // همگام‌سازی در پس‌زمینه با گوگل‌شیت در صورت اتصال به اینترنت
+      if (navigator.onLine) {
+        verifySubscriptionWithServer(false);
+      }
+    }
+
+    function showPaywallModal() {
+      const totalMins = Object.values(state.studyHistory).reduce((a, b) => a + b, 0);
+      document.getElementById('paywallUserStatsText').innerHTML =
+        `پهلوان <b>${state.userName}</b>! تو تا امروز <b>${totalMins} دقیقه</b> مطالعه ثبت کرده‌ای و <b>${state.farr} فرّ ایزدی</b> اندوخته‌ای. برای حفظ زنجیره <b>${state.streak} روزه</b> و دسترسی دائمی، اشتراک خود را فعال کن:`;
+      document.getElementById('paywallPriceText').textContent = ADMIN_CONFIG.SUBSCRIPTION_PRICE;
+      document.getElementById('paywallCardNumberText').textContent = ADMIN_CONFIG.BANK_CARD_NUMBER;
+      document.getElementById('paywallCardOwnerText').textContent = ADMIN_CONFIG.BANK_CARD_OWNER;
+      document.getElementById('paywallUserPhoneLabel').textContent = state.userPhone || 'شماره خود';
+
+      const tgText = encodeURIComponent(`سلام، فیش واریزی جهت فعال‌سازی دائمی (VIP) داشبورد هفت‌خوان.\nنام: ${state.userName}\nشماره موبایل: ${state.userPhone}`);
+      document.getElementById('paywallTelegramBtn').href = `https://t.me/${ADMIN_CONFIG.ADMIN_TELEGRAM_ID}?text=${tgText}`;
+
+      document.getElementById('paywallModal').classList.add('show');
+    }
+
+    function copyBankCardNumber() {
+      const rawCard = ADMIN_CONFIG.BANK_CARD_NUMBER.replace(/[^0-9]/g, '');
+      navigator.clipboard.writeText(rawCard).then(() => {
+        showToast('💳 شماره کارت کپی شد!');
+      });
+    }
+
+    async function verifySubscriptionWithServer(isManualCheck) {
+      if (!ADMIN_CONFIG.GOOGLE_SHEET_URL || ADMIN_CONFIG.GOOGLE_SHEET_URL.includes("PASTE_YOUR")) {
+        if (isManualCheck) showToast('لینک سرور گوگل‌شیت هنوز در تنظیمات قرار نگرفته است');
+        return;
+      }
+      if (!navigator.onLine) {
+        if (isManualCheck) showToast('لطفاً اینترنت خود را روشن کنید و دوباره بزنید');
+        return;
+      }
+
+      const btn = document.getElementById('checkVipStatusBtn');
+      if (isManualCheck && btn) btn.textContent = 'در حال استعلام از سرور... ⏳';
+
+      const totalMins = Object.values(state.studyHistory).reduce((a, b) => a + b, 0);
+      const payload = {
+        action: 'sync',
+        phone: state.userPhone,
+        userName: state.userName,
+        deviceId: state.deviceId,
+        device: /Mobi|Android|iPhone/i.test(navigator.userAgent) ? 'Mobile' : 'Desktop',
+        telemetry: {
+          activeDaysCount: Object.keys(state.studyHistory).length,
+          streak: state.streak,
+          farr: state.farr,
+          totalStudyMinutes: totalMins,
+          monthlyGoalHours: state.monthlyGoalHours,
+          timerVsManual: `T:${state.telemetry.timerSessions}|M:${state.telemetry.manualSessions}`,
+          coursesCount: state.courses.length,
+          reviewsCount: state.reviews.length,
+          tabUsage: JSON.stringify(state.telemetry.tabClicks),
+          promptCopies: state.telemetry.promptCopies
+        }
+      };
+
+      try {
+        const res = await fetch(ADMIN_CONFIG.GOOGLE_SHEET_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+
+        if (data.error === 'DEVICE_LOCKED') {
+          state.accountStatus = 'Blocked';
+          saveAppState();
+          showPaywallModal();
+          alert(data.msg);
+          return;
+        }
+
+        if (data.ok) {
+          state.accountStatus = data.status || state.accountStatus;
+          if (data.installDate) state.installDate = data.installDate;
+          saveAppState();
+
+          if (state.accountStatus === 'VIP' || !data.expired) {
+            document.getElementById('paywallModal').classList.remove('show');
+            if (isManualCheck) showToast('🎉 تبریک! اشتراک دائمی (VIP) شما فعال شد!');
+          } else {
+            showPaywallModal();
+            if (isManualCheck) showToast('هنوز وضعیت شما در سیستم VIP نشده است. پس از ارسال فیش صبر کنید.');
+          }
+        }
+      } catch (err) {
+        if (isManualCheck) showToast('خطا در ارتباط با سرور؛ دوباره تلاش کنید');
+      } finally {
+        if (isManualCheck && btn) btn.textContent = '🔄 واریز کردم؛ بررسی و باز کردن قفل';
+      }
+    }
+
+    /* ============================================================================
+       ارسال مستقیم فیدبک به شیت دوم (Feedbacks) در گوگل‌شیت
+       ============================================================================ */
+    function selectFbCategory(val, label, el) {
+      selectedFeedbackCategory = val;
+      document.getElementById('fbCategorySelectedLabel').textContent = label;
+      el.parentElement.querySelectorAll('.custom-select-option').forEach(o => o.classList.remove('selected'));
+      el.classList.add('selected');
+      document.getElementById('fbCategorySelectWrap').classList.remove('open');
+    }
+
+    async function submitUserFeedbackToSheet() {
+      const msgInput = document.getElementById('feedbackMessageInput');
+      const message = msgInput.value.trim();
+      if (!message) return showToast('لطفاً متن نظر یا گزارش خود را بنویسید');
+      if (!navigator.onLine) return showToast('برای ارسال فیدبک نیاز به اتصال اینترنت دارید');
+
+      const btn = document.getElementById('sendFeedbackBtn');
+      btn.textContent = 'در حال ارسال... ⏳';
+
+      try {
+        if (ADMIN_CONFIG.GOOGLE_SHEET_URL && !ADMIN_CONFIG.GOOGLE_SHEET_URL.includes("PASTE_YOUR")) {
+          await fetch(ADMIN_CONFIG.GOOGLE_SHEET_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({
+              action: 'feedback',
+              phone: state.userPhone,
+              userName: state.userName,
+              category: selectedFeedbackCategory,
+              message: message,
+              device: /Mobi|Android|iPhone/i.test(navigator.userAgent) ? 'Mobile' : 'Desktop'
+            })
+          });
+        }
+        msgInput.value = '';
+        showToast('❤️ ممنون! پیام شما مستقیم در سیستم ثبت شد');
+      } catch (e) {
+        showToast('ارسال انجام شد ✨');
+      } finally {
+        btn.textContent = 'ارسال مستقیم فیدبک 🚀';
+      }
+    }
+
+    /* ============================================================================
+       وب‌اپلیکیشن قابل نصب (PWA Service Worker & Install Prompt)
+       ============================================================================ */
+    let deferredPwaPrompt = null;
+
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(() => {});
+      });
+    }
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPwaPrompt = e;
+      document.getElementById('pwaInstallBanner').classList.add('show');
+    });
+
+    function triggerPwaInstall() {
+      if (!deferredPwaPrompt) return;
+      deferredPwaPrompt.prompt();
+      deferredPwaPrompt.userChoice.then(() => {
+        document.getElementById('pwaInstallBanner').classList.remove('show');
+        deferredPwaPrompt = null;
+      });
+    }
+
+    /* ============================================================================
+       سایر توابع اصلی داشبورد (آنبوردینگ، سیمرغ، تایمر، مرور و آمار)
+       ============================================================================ */
+    const PASTEL_PALETTE = ['purple', 'mint', 'pink', 'blue'];
+
+    function checkOfflineDailyStreak() {
+      const today = getTodayIso();
+      if (!state.lastStudyDate || state.lastStudyDate === today) return;
+      const yesterday = addDaysIso(today, -1);
+      const twoDaysAgo = addDaysIso(today, -2);
+
+      if (state.lastStudyDate === yesterday) return;
+      if (state.lastStudyDate === twoDaysAgo && state.feathers > 0) {
+        state.feathers -= 1;
+        state.lastStudyDate = yesterday;
+        saveAppState();
+        showToast('🪶 یک پر سیمرغ سوخت و زنجیره‌ات نجات یافت!');
+      } else if (state.lastStudyDate < yesterday) {
+        state.streak = 0;
+        saveAppState();
+      }
+    }
+
+    function checkOnboardingStatus() {
+      if (!state.onboarded || state.courses.length === 0) {
+        document.getElementById('onboardingModal').classList.add('show');
+      } else {
+        checkSubscriptionGate();
+      }
+    }
+
+    function addOnboardingCourse() {
+      const input = document.getElementById('onboardCourseInput');
+      const name = input.value.trim();
+      if (!name) return showToast('لطفاً نام درس را بنویسید');
+      const color = PASTEL_PALETTE[onboardingTempCourses.length % PASTEL_PALETTE.length];
+      onboardingTempCourses.push({
+        id: 'c_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
+        name, color, totalMinutes: 0
+      });
+      input.value = '';
+      renderOnboardingCourses();
+    }
+
+    function removeOnboardingCourse(idx) {
+      onboardingTempCourses.splice(idx, 1);
+      renderOnboardingCourses();
+    }
+
+    function renderOnboardingCourses() {
+      const box = document.getElementById('onboardCoursesList');
+      if (onboardingTempCourses.length === 0) {
+        box.innerHTML = `<span style="font-size:0.74rem; color:var(--text-muted);">هنوز درسی اضافه نشده است...</span>`;
+        return;
+      }
+      const bgMap = { purple: '#EAE4FF', mint: '#E0F5EE', pink: '#FFE8F0', blue: '#E3F0FF' };
+      box.innerHTML = onboardingTempCourses.map((c, idx) => `
+        <span class="onboard-course-chip" style="background:${bgMap[c.color]}">
+          ${c.name} <b style="cursor:pointer; color:#E11D48;" onclick="removeOnboardingCourse(${idx})">×</b>
+        </span>
+      `).join('');
+    }
+
+    async function finishOnboarding() {
+      const nameVal = document.getElementById('onboardName').value.trim();
+      const phoneVal = document.getElementById('onboardPhone').value.trim();
+      const dailyHours = parseFloat(document.getElementById('onboardDailyHours').value) || 3;
+
+      if (!nameVal) return showToast('لطفاً نام خود را وارد کنید');
+      if (!phoneVal || phoneVal.length < 10) return showToast('لطفاً شماره موبایل معتبر وارد کنید');
+
+      const pendingCourse = document.getElementById('onboardCourseInput').value.trim();
+      if (pendingCourse && onboardingTempCourses.length === 0) {
+        onboardingTempCourses.push({ id: 'c_' + Date.now(), name: pendingCourse, color: 'purple', totalMinutes: 0 });
+      }
+      if (onboardingTempCourses.length === 0) return showToast('لطفاً حداقل ۱ درس اضافه کنید!');
+
+      state.userName = nameVal;
+      state.userPhone = phoneVal;
+      state.monthlyGoalHours = Math.round(dailyHours * 30);
+      state.courses = [...onboardingTempCourses];
+      state.selectedCourseId = state.courses[0].id;
+      state.installDate = getTodayIso();
+      state.onboarded = true;
+      saveAppState();
+
+      document.getElementById('onboardingModal').classList.remove('show');
+      renderAllUI();
+      showToast(`خوش آمدی ${state.userName}! ۷ روز رایگان تو آغاز شد ⚔️`);
+      checkSubscriptionGate();
+    }
+
+    /* اسلایدر هوشمند پیام‌های سیمرغ */
+    let activeSimorghMessages = [];
+    let currentSimorghSlideIndex = 0;
+    let simorghCarouselInterval = null;
+
+    function evaluateSimorghMessages() {
+      const today = getTodayIso();
+      const todayMins = state.studyHistory[today] || 0;
+      const hour = new Date().getHours();
+      const dueReviews = state.reviews.filter(r => r.nextReviewDate <= today);
+      const totalDaysStudied = Object.keys(state.studyHistory).length;
+      const monthTotalMins = Object.values(state.studyHistory).reduce((a, b) => a + b, 0);
+      const goalRatio = state.monthlyGoalHours > 0 ? (monthTotalMins / 60) / state.monthlyGoalHours : 0;
+      const dayOfMonth = new Date().getDate();
+
+      const msgs = [];
+      if (hour >= 20 && todayMins === 0) {
+        msgs.push({ badge: '🔥 خطر خاموشی زنجیره', text: 'ای پهلوان! خورشید غروب کرده و هنوز شمشیر از نیام نکشیده‌ای! فقط ۱۵ دقیقه مطالعه کن تا شعله زنجیره‌ات خاموش نشود.' });
+      }
+      if (dueReviews.length > 0) {
+        msgs.push({ badge: `🛡️ ${dueReviews.length} مرور واجب امروز`, text: `هشدار سیمرغ: دیوِ فراموشی در کمینِ ${dueReviews.length} مبحث قبلی توست! از تبِ مرور امروز دانشت را تثبیت کن.` });
+      }
+      if (hour >= 5 && hour < 12 && todayMins === 0) {
+        msgs.push({ badge: '🌅 سپیده‌دمِ پیروزی', text: 'ذهنِ صبحگاهی تو برنده مثل تیغِ رستم است؛ اولین نبردِ امروز را با کدام درس آغاز می‌کنی؟' });
+      }
+      if (todayMins >= 30 && todayMins < 120) {
+        msgs.push({ badge: '🏹 پیشرویِ استوار', text: `آفرین بر این اراده! امروز ${todayMins} دقیقه تمرکز کرده‌ای. یک پومودوروی دیگر تو را به قله‌ی امروزت می‌رساند.` });
+      }
+      if (todayMins >= 120) {
+        msgs.push({ badge: '👑 حماسه‌آفرینی امروز', text: `حماسه آفریدی پهلوان! امروز بیش از ${Math.floor(todayMins / 60)} ساعت در میدان دانایی رزمیده‌ای. رستم دستان به این تمرکز غبطه می‌خورد!` });
+      }
+      if (dayOfMonth >= 15 && goalRatio < 0.35) {
+        msgs.push({ badge: '🐎 یادآوری هدف ماهانه', text: 'نگاهی به هدفِ ماهانه‌ات بینداز! برای فتحِ این خوان، باید از امروز کمی بر سرعتِ رخشِ اراده‌ات بیفزایی.' });
+      }
+      if (totalDaysStudied === 0 && todayMins === 0) {
+        msgs.push({ badge: '🦚 آغاز هفت‌خوان دانایی', text: `به هفت‌خوانِ دانایی خوش آمدی ${state.userName || 'پهلوان'}! من سیمرغ، راهنمای تو در این مسیرم. اولین درس را انتخاب کن و تایمر را بزن.` });
+      } else if (msgs.length === 0) {
+        msgs.push({ badge: '✨ همراهیِ سیمرغ دانا', text: 'هر دقیقه تمرکز تو، فرّ ایزدی بیشتری در وجودت جاری می‌کند. درس مورد نظرت را انتخاب کن و میدان را فتح کن!' });
+      }
+
+      activeSimorghMessages = msgs;
+      if (currentSimorghSlideIndex >= activeSimorghMessages.length) currentSimorghSlideIndex = 0;
+      renderSimorghSlide();
+      setupSimorghAutoCarousel();
+    }
+
+    function renderSimorghSlide() {
+      const item = activeSimorghMessages[currentSimorghSlideIndex] || activeSimorghMessages[0];
+      if (!item) return;
+      const msgEl = document.getElementById('simorghMessageText');
+      const badgeEl = document.getElementById('simorghConditionBadge');
+      const dotsBox = document.getElementById('simorghDotsContainer');
+
+      msgEl.classList.add('fade-out');
+      setTimeout(() => {
+        badgeEl.textContent = item.badge;
+        msgEl.textContent = item.text;
+        msgEl.classList.remove('fade-out');
+      }, 200);
+
+      if (activeSimorghMessages.length <= 1) {
+        dotsBox.style.display = 'none';
+      } else {
+        dotsBox.style.display = 'flex';
+        dotsBox.innerHTML = activeSimorghMessages.map((_, idx) =>
+          `<span class="simorgh-dot ${idx === currentSimorghSlideIndex ? 'active' : ''}" onclick="goToSimorghSlide(${idx})"></span>`
+        ).join('');
+      }
+    }
+
+    function goToSimorghSlide(idx) {
+      currentSimorghSlideIndex = idx;
+      renderSimorghSlide();
+      setupSimorghAutoCarousel();
+    }
+
+    function setupSimorghAutoCarousel() {
+      if (simorghCarouselInterval) clearInterval(simorghCarouselInterval);
+      if (activeSimorghMessages.length > 1) {
+        simorghCarouselInterval = setInterval(() => {
+          currentSimorghSlideIndex = (currentSimorghSlideIndex + 1) % activeSimorghMessages.length;
+          renderSimorghSlide();
+        }, 6000);
+      }
+    }
+
+    function toggleCustomDropdown(wrapperId) {
+      const target = document.getElementById(wrapperId);
+      const isOpen = target.classList.contains('open');
+      document.querySelectorAll('.custom-select-wrapper.open').forEach(el => el.classList.remove('open'));
+      if (!isOpen) target.classList.add('open');
+    }
+
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.custom-select-wrapper')) {
+        document.querySelectorAll('.custom-select-wrapper.open').forEach(el => el.classList.remove('open'));
+      }
+    });
+
+    function renderCourseCustomDropdowns() {
+      const list1 = document.getElementById('studyCourseOptionsList');
+      const label1 = document.getElementById('studyCourseSelectedLabel');
+      const list2 = document.getElementById('quickReviewCourseList');
+      const label2 = document.getElementById('quickReviewCourseLabel');
+
+      if (state.courses.length === 0) {
+        label1.textContent = 'ابتدا یک درس اضافه کنید';
+        label2.textContent = 'ابتدا یک درس اضافه کنید';
+        list1.innerHTML = ''; list2.innerHTML = '';
+        return;
+      }
+      if (!state.selectedCourseId || !state.courses.find(c => c.id === state.selectedCourseId)) {
+        state.selectedCourseId = state.courses[0].id;
+      }
+      const activeCourse = state.courses.find(c => c.id === state.selectedCourseId);
+      label1.textContent = `📘 ${activeCourse.name}`;
+      label2.textContent = `📘 ${activeCourse.name}`;
+
+      const optionsHtml = state.courses.map(c => `
+        <div class="custom-select-option ${c.id === state.selectedCourseId ? 'selected' : ''}" onclick="selectActiveCourse('${c.id}')">
+          <span>📘 ${c.name}</span>
+          <span style="font-size:0.72rem; color:var(--text-muted);">${c.totalMinutes} دقیقه</span>
+        </div>
+      `).join('');
+      list1.innerHTML = optionsHtml;
+      list2.innerHTML = optionsHtml;
+    }
+
+    function selectActiveCourse(courseId) {
+      state.selectedCourseId = courseId;
+      saveAppState();
+      renderCourseCustomDropdowns();
+      document.querySelectorAll('.custom-select-wrapper.open').forEach(el => el.classList.remove('open'));
+    }
+
+    function selectCourseColorOption(colorCode, labelText, el) {
+      state.newCourseColor = colorCode;
+      document.getElementById('courseColorSelectedLabel').textContent = labelText;
+      el.parentElement.querySelectorAll('.custom-select-option').forEach(o => o.classList.remove('selected'));
+      el.classList.add('selected');
+      document.getElementById('courseColorSelectWrap').classList.remove('open');
+    }
+
+    /* تایمر و ثبت مطالعه */
+    let timerSeconds = 25 * 60;
+    let timerInitialSeconds = 25 * 60;
+    let isStopwatchMode = false;
+    let timerRunning = false;
+    let timerInterval = null;
+
+    function setStudyInputMode(mode) {
+      document.getElementById('modeBtnTimer').classList.toggle('active', mode === 'timer');
+      document.getElementById('modeBtnManual').classList.toggle('active', mode === 'manual');
+      document.getElementById('liveTimerPanel').style.display = mode === 'timer' ? 'block' : 'none';
+      document.getElementById('manualEntryPanel').style.display = mode === 'manual' ? 'block' : 'none';
+    }
+
+    function setTimerPreset(mins, btnEl) {
+      if (timerRunning) toggleTimerRun();
+      document.querySelectorAll('#liveTimerPanel .timer-mode-btn').forEach(b => b.classList.remove('active'));
+      btnEl.classList.add('active');
+      if (mins === 0) {
+        isStopwatchMode = true; timerSeconds = 0; timerInitialSeconds = 0;
+      } else {
+        isStopwatchMode = false; timerSeconds = mins * 60; timerInitialSeconds = mins * 60;
+      }
+      updateTimerDigitsUI();
+    }
+
+    function updateTimerDigitsUI() {
+      const m = String(Math.floor(timerSeconds / 60)).padStart(2, '0');
+      const s = String(timerSeconds % 60).padStart(2, '0');
+      document.getElementById('timerDisplay').textContent = `${m}:${s}`;
+    }
+
+    function toggleTimerRun() {
+      if (state.courses.length === 0) return showToast('ابتدا یک درس اضافه کنید!');
+      const btn = document.getElementById('startTimerBtn');
+      const status = document.getElementById('timerSubStatus');
+      if (!timerRunning) {
+        timerRunning = true;
+        btn.textContent = 'توقف موقت ⏸️';
+        status.textContent = 'در حال نبرد تمرکز... 🔥';
+        timerInterval = setInterval(() => {
+          if (isStopwatchMode) { timerSeconds++; updateTimerDigitsUI(); }
+          else {
+            if (timerSeconds > 0) { timerSeconds--; updateTimerDigitsUI(); }
+            else finishAndSaveTimerSession();
+          }
+        }, 1000);
+      } else {
+        timerRunning = false;
+        clearInterval(timerInterval);
+        btn.textContent = 'ادامه نبرد تمرکز ▶️';
+        status.textContent = 'متوقف شده';
+      }
+    }
+
+    function finishAndSaveTimerSession() {
+      if (timerRunning) { timerRunning = false; clearInterval(timerInterval); }
+      const elapsedSeconds = isStopwatchMode ? timerSeconds : (timerInitialSeconds - timerSeconds);
+      const mins = Math.max(1, Math.round(elapsedSeconds / 60));
+      if (elapsedSeconds < 20) return showToast('حداقل چند ثانیه مطالعه کن و بعد ثبت را بزن!');
+
+      timerSeconds = isStopwatchMode ? 0 : timerInitialSeconds;
+      updateTimerDigitsUI();
+      document.getElementById('startTimerBtn').textContent = 'شروع نبرد تمرکز';
+      document.getElementById('timerSubStatus').textContent = 'آماده برای شروع مطالعه';
+
+      state.telemetry.timerSessions++;
+      recordStudyMinutes(state.selectedCourseId, mins);
+    }
+
+    function submitManualStudy() {
+      if (state.courses.length === 0) return showToast('ابتدا یک درس اضافه کنید!');
+      const mins = parseInt(document.getElementById('manualMinutesInput').value, 10);
+      if (!mins || mins <= 0) return showToast('مدت زمان مطالعه را به دقیقه وارد کنید');
+      document.getElementById('manualMinutesInput').value = '';
+      state.telemetry.manualSessions++;
+      recordStudyMinutes(state.selectedCourseId, mins);
+    }
+
+    function recordStudyMinutes(courseId, mins) {
+      const course = state.courses.find(c => c.id === courseId);
+      if (!course) return;
+      const today = getTodayIso();
+      course.totalMinutes += mins;
+      state.studyHistory[today] = (state.studyHistory[today] || 0) + mins;
+
+      if (state.lastStudyDate !== today) {
+        state.streak += 1;
+        state.lastStudyDate = today;
+        state.farr += 20;
+      }
+      state.farr += mins;
+      lastCompletedCourseId = course.id;
+
+      saveAppState();
+      renderAllUI();
+      verifySubscriptionWithServer(false);
+
+      document.getElementById('postStudySummaryText').textContent =
+        `${mins} دقیقه مطالعه برای درس «${course.name}» ثبت شد و +${mins} فرّ ایزدی گرفتی! ✨`;
+      document.getElementById('postStudyTopicInput').value = '';
+      document.getElementById('postStudyModal').classList.add('show');
+    }
+
+    function confirmPostStudyReview(shouldAdd) {
+      const modal = document.getElementById('postStudyModal');
+      if (shouldAdd) {
+        const topic = document.getElementById('postStudyTopicInput').value.trim();
+        if (!topic) return showToast('لطفاً نام مبحث خوانده‌شده را بنویسید');
+        createSpacedReviewItem(lastCompletedCourseId, topic);
+        showToast('🧠 مبحث وارد چرخه مرور ضد فراموشی شد!');
+      }
+      modal.classList.remove('show');
+      renderAllUI();
+    }
+
+    const REVIEW_INTERVALS = [1, 3, 7, 30];
+
+    function createSpacedReviewItem(courseId, topicTitle) {
+      const course = state.courses.find(c => c.id === courseId) || state.courses[0];
+      if (!course) return;
+      state.reviews.push({
+        id: 'rev_' + Date.now(),
+        courseId: course.id,
+        courseName: course.name,
+        topic: topicTitle,
+        stage: 0,
+        nextReviewDate: addDaysIso(getTodayIso(), 1)
+      });
+      saveAppState();
+    }
+
+    function addTopicToReviewFromHome() {
+      if (state.courses.length === 0) return showToast('ابتدا یک درس اضافه کنید!');
+      const input = document.getElementById('quickReviewTopicInput');
+      const topic = input.value.trim();
+      if (!topic) return showToast('نام مبحث یا فصل را وارد کنید');
+      createSpacedReviewItem(state.selectedCourseId, topic);
+      input.value = '';
+      renderAllUI();
+      showToast('🧠 مبحث با موفقیت به چرخه مرور اضافه شد!');
+    }
+
+    function completeReviewStep(reviewId) {
+      const item = state.reviews.find(r => r.id === reviewId);
+      if (!item) return;
+      item.stage += 1;
+      state.farr += 25;
+      if (item.stage >= REVIEW_INTERVALS.length) {
+        state.reviews = state.reviews.filter(r => r.id !== reviewId);
+        showToast('🎉 این مبحث هر ۴ پله مرور را گذراند و تثبیت شد (+۲۵ فرّ)');
+      } else {
+        const nextDays = REVIEW_INTERVALS[item.stage];
+        item.nextReviewDate = addDaysIso(getTodayIso(), nextDays);
+        showToast(`✅ مرور انجام شد (+۲۵ فرّ)! مرور بعدی: ${nextDays} روز دیگر`);
+      }
+      saveAppState();
+      renderAllUI();
+    }
+
+    function openTopStatModal(type) {
+      const modal = document.getElementById('topStatModal');
+      const box = document.getElementById('topStatModalContent');
+      if (type === 'streak') {
+        box.innerHTML = `
+          <div style="text-align:center;">
+            <div style="font-size:2.8rem;">🔥</div>
+            <h3 class="font-black" style="font-size:1.3rem; color:#EA580C; margin-top:4px;">زنجیره پیوستگی: ${state.streak} روز</h3>
+            <p style="font-size:0.8rem; color:var(--text-muted); margin-top:6px; line-height:1.6;">
+              هر روز که مطالعه ثبت کنی، شعله زنجیره‌ات روشن می‌ماند و یک خانه از تقویم ۳۶۵ روزه‌ی امسالت رنگی می‌شود!
+            </p>
+          </div>
+          <div style="margin-top:14px;">
+            <div style="display:flex; justify-content:space-between; font-size:0.74rem; font-weight:800; color:var(--text-muted);">
+              <span>نقشه ۳۶۵ روز تلاش تو:</span>
+              <span>کم ⬜ 🟪 🟣 زیاد</span>
+            </div>
+            <div class="heatmap-scroll"><div class="heatmap-grid">${build365HeatmapHtml()}</div></div>
+          </div>
+          <button type="button" class="btn-primary" style="width:100%; margin-top:10px;" onclick="closeTopStatModal()">ادامه نبرد! 💪</button>
+        `;
+      } else if (type === 'feather') {
+        box.innerHTML = `
+          <div style="text-align:center;">
+            <div style="font-size:2.8rem;">🪶</div>
+            <h3 class="font-black" style="font-size:1.3rem; color:var(--pastel-purple-dark); margin-top:4px;">پرِ سیمرغ (سپر محافظ زنجیره)</h3>
+            <p style="font-size:0.82rem; color:var(--text-muted); margin-top:8px; line-height:1.7;">
+              اگر یک روز نتوانی درس بخوانی، <b>پرِ سیمرغ خودکار می‌سوزد اما نمی‌گذارد زنجیره روزانه‌ات صفر شود!</b>
+            </p>
+            <div style="background:var(--pastel-purple); padding:14px; border-radius:18px; margin:14px 0; font-weight:800; color:#2D264B;">
+              موجودی فعلی تو: ${state.feathers} پرِ سیمرغ
+            </div>
+            <button type="button" class="btn-primary" style="width:100%; margin-bottom:8px;" onclick="buySimorghFeather()">خرید ۱ پرِ سیمرغ (۵۰۰ فرّ ایزدی) ✨</button>
+            <button type="button" class="btn-secondary" style="width:100%;" onclick="closeTopStatModal()">بستن</button>
+          </div>
+        `;
+      } else if (type === 'farr') {
+        const rank = getCurrentMythTrial();
+        box.innerHTML = `
+          <div style="text-align:center;">
+            <div style="font-size:2.8rem;">✨</div>
+            <h3 class="font-black" style="font-size:1.3rem; color:#CA8A04; margin-top:4px;">${state.farr} فرّ ایزدی</h3>
+            <div style="text-align:right; background:#FEFCE8; border:1px solid #FEF08A; padding:12px 14px; border-radius:16px; margin:12px 0; font-size:0.8rem; line-height:1.9; font-weight:700;">
+              ⏱️ هر ۱ دقیقه مطالعه = <b>+۱ فرّ</b><br>
+              🧠 انجام هر مرورِ ضد فراموشی = <b>+۲۵ فرّ</b><br>
+              🔥 حفظ زنجیره در هر روز = <b>+۲۰ فرّ</b>
+            </div>
+            <p style="font-size:0.8rem; font-weight:800; color:var(--pastel-purple-dark); margin-bottom:12px;">جایگاه فعلی: ${rank.name}</p>
+            <button type="button" class="btn-primary" style="width:100%;" onclick="closeTopStatModal()">عالیه!</button>
+          </div>
+        `;
+      }
+      modal.classList.add('show');
+    }
+
+    function closeTopStatModal() { document.getElementById('topStatModal').classList.remove('show'); }
+
+    function buySimorghFeather() {
+      if (state.farr < 500) return showToast('فرّ کافی نداری! ۵۰۰ فرّ نیاز است.');
+      state.farr -= 500; state.feathers += 1;
+      saveAppState(); renderAllUI(); openTopStatModal('feather');
+      showToast('🪶 ۱ پر سیمرغ اضافه شد!');
+    }
+
+    function build365HeatmapHtml() {
+      const today = getTodayIso();
+      let html = '';
+      for (let i = 364; i >= 0; i--) {
+        const dIso = addDaysIso(today, -i);
+        const mins = state.studyHistory[dIso] || 0;
+        let lvlClass = mins > 0 && mins < 45 ? 'lvl-1' : mins >= 45 && mins < 120 ? 'lvl-2' : mins >= 120 ? 'lvl-3' : '';
+        html += `<div class="heat-cell ${lvlClass} ${i === 0 ? 'today-ring' : ''}" title="${dIso}: ${mins} دقیقه"></div>`;
+      }
+      return html;
+    }
+
+    /* صدای تمرکز آفلاین */
+    let audioCtx = null, activeAudioNode = null, soundPlaying = false, selectedSoundType = 'rain';
+
+    function selectSoundOption(type, label, el) {
+      selectedSoundType = type;
+      document.getElementById('soundSelectedLabel').textContent = label;
+      el.parentElement.querySelectorAll('.custom-select-option').forEach(o => o.classList.remove('selected'));
+      el.classList.add('selected');
+      document.getElementById('soundSelectWrap').classList.remove('open');
+      if (soundPlaying) { stopFocusSound(); startFocusSound(); }
+    }
+
+    function toggleFocusSound() { if (soundPlaying) stopFocusSound(); else startFocusSound(); }
+
+    function startFocusSound() {
+      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+      if (!audioCtx) audioCtx = new AudioContextClass();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      soundPlaying = true;
+      document.getElementById('soundToggleBtn').textContent = 'توقف صدای تمرکز 🔇';
+
+      if (selectedSoundType === 'alpha') {
+        const osc1 = audioCtx.createOscillator(), osc2 = audioCtx.createOscillator(), gain = audioCtx.createGain();
+        osc1.frequency.value = 200; osc2.frequency.value = 210; gain.gain.value = 0.06;
+        osc1.connect(gain); osc2.connect(gain); gain.connect(audioCtx.destination);
+        osc1.start(); osc2.start();
+        activeAudioNode = { stop: () => { osc1.stop(); osc2.stop(); } };
+      } else {
+        const bufferSize = 2 * audioCtx.sampleRate;
+        const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+        const output = noiseBuffer.getChannelData(0);
+        let lastOut = 0.0;
+        for (let i = 0; i < bufferSize; i++) {
+          const white = Math.random() * 2 - 1;
+          output[i] = (lastOut + (0.02 * white)) / 1.02;
+          lastOut = output[i];
+          output[i] *= selectedSoundType === 'rain' ? 2.2 : 3.2;
+        }
+        const whiteNoise = audioCtx.createBufferSource();
+        whiteNoise.buffer = noiseBuffer; whiteNoise.loop = true;
+        const filter = audioCtx.createBiquadFilter();
+        filter.type = 'lowpass'; filter.frequency.value = selectedSoundType === 'rain' ? 850 : 420;
+        const gain = audioCtx.createGain(); gain.gain.value = 0.14;
+        whiteNoise.connect(filter); filter.connect(gain); gain.connect(audioCtx.destination);
+        whiteNoise.start(0); activeAudioNode = whiteNoise;
+      }
+    }
+
+    function stopFocusSound() {
+      if (activeAudioNode) { try { activeAudioNode.stop(); } catch (e) {} activeAudioNode = null; }
+      soundPlaying = false;
+      document.getElementById('soundToggleBtn').textContent = 'پخش صدای تمرکز 🔊';
+    }
+
+    /* پرامپت‌ساز هوش مصنوعی */
+    let currentAiLevel = 'دبیرستان و کنکور', currentAiTemplate = 'feynman';
+
+    function selectAiLevel(val, label, el) {
+      currentAiLevel = val;
+      document.getElementById('aiLevelSelectedLabel').textContent = label;
+      el.parentElement.querySelectorAll('.custom-select-option').forEach(o => o.classList.remove('selected'));
+      el.classList.add('selected');
+      document.getElementById('aiLevelSelectWrap').classList.remove('open');
+      generateMegaPromptPreview();
+    }
+
+    function selectAiTemplate(val, label, el) {
+      currentAiTemplate = val;
+      state.telemetry.lastPromptType = val;
+      document.getElementById('aiTemplateSelectedLabel').textContent = label;
+      el.parentElement.querySelectorAll('.custom-select-option').forEach(o => o.classList.remove('selected'));
+      el.classList.add('selected');
+      document.getElementById('aiTemplateSelectWrap').classList.remove('open');
+      generateMegaPromptPreview();
+    }
+
+    function generateMegaPromptPreview() {
+      const topic = document.getElementById('aiTopicInput').value.trim() || '[نام درس و مبحث را وارد کنید]';
+      const level = currentAiLevel;
+      const prompts = {
+        feynman: `تو یک استاد برجسته و متخصص آموزش عمیق در مقطع «${level}» هستی. من می‌خواهم مبحث «${topic}» را به روش تکنیک فاینمن از صفر تا تسلط کامل یاد بگیرم. لطفاً دقیقاً در ۴ گام زیر به من آموزش بده:\n۱. توضیح فوق‌ساده (مثال ملموس روزمره): مفاهیم پایه را طوری توضیح بده که یک نوجوان ۱۲ ساله هم کاملاً درک کند.\n۲. کالبدشکافی علمی و استاندارد: تعاریف رسمی، فرمول‌ها و روابط علت و معلولی را متناسب با سطح «${level}» شرح بده.\n۳. نقاط کور و دام‌های رایج: ۳ مورد از رایج‌ترین اشتباهات امتحانی در این مبحث را مشخص کن.\n۴. چالش سنجش درک: در پایان، ۲ سوال مفهومی از من بپرس و منتظر پاسخ من بمان.`,
+        exam: `تو یک طراح ارشد سوالات مفهومی و استاندارد در مقطع «${level}» هستی. برای مبحث «${topic}» یک آزمون ۵ سوالی طراحی کن.\nقوانین:\n- سوالات دارای گزینه‌های نزدیک به هم و دام آموزشی باشند.\n- پاسخ صحیح را در پیام اول ننویس! ابتدا سوالات را بده و منتظر جواب من بمان.\n- پس از دریافت جواب من، پاسخنامه تشریحی کامل را ارائه بده.`,
+        summary: `تو متخصص استخراج نقشه ذهنی و خلاصه‌نویسی شب امتحان برای مقطع «${level}» هستی. کل مبحث «${topic}» را به شکل زیر خلاصه کن:\n۱. عصاره مبحث در ۳ خط.\n۲. جدول مقایسه‌ای مفاهیم و فرمول‌های کلیدی.\n۳. لیست «اگر در امتحان دیدی... بلافاصله به یاد بیاور که...».\n۴. ۵ نکته طلایی و استثنائات پرتکرار.`,
+        mnemonic: `تو متخصص حافظه تصویری و تکنیک‌های یادیار (Mnemonics) هستی. در مبحث «${topic}» (مقطع ${level})، بخش‌های حفظی سخت را استخراج کن و با ساختن کلمات رمزی، شعر یا داستان‌پردازی تصویری اغراق‌آمیز، کدهای به‌سپاری بساز تا هرگز فراموش نشوند.`,
+        socratic: `تو معلم خصوصی من به روش «پرسشگری سقراطی» در مقطع «${level}» هستی. من در درک مبحث «${topic}» مشکل دارم. به جای دادن جواب آماده، موضوع را به قدم‌های کوچک تقسیم کن و در هر قدم با یک سوال راهنما ذهن من را هدایت کن.`,
+        planner: `تو مشاور تحصیلی خبره برای مقطع «${level}» هستی. من باید مبحث «${topic}» را در زمان محدود جمع‌بندی کنم. بر اساس قانون پارتو (۲۰/۸۰) مشخص کن کدام بخش‌ها بیشترین بار امتحانی را دارند و یک برنامه بلوک‌بندی‌شده ۴۵ دقیقه‌ای برایم طراحی کن.`
+      };
+      document.getElementById('megaPromptPreviewBox').textContent = prompts[currentAiTemplate];
+    }
+
+    function copyMegaPrompt() {
+      const text = document.getElementById('megaPromptPreviewBox').textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        state.telemetry.promptCopies++;
+        saveAppState();
+        showToast('📋 پرامپت حرفه‌ای کپی شد!');
+      });
+    }
+
+    function quickAddCoursePrompt() {
+      const name = prompt('نام درس جدید را وارد کنید:');
+      if (!name || !name.trim()) return;
+      const color = PASTEL_PALETTE[state.courses.length % PASTEL_PALETTE.length];
+      const newCourse = { id: 'c_' + Date.now(), name: name.trim(), color, totalMinutes: 0 };
+      state.courses.push(newCourse);
+      state.selectedCourseId = newCourse.id;
+      saveAppState(); renderAllUI();
+      showToast(`درس «${newCourse.name}» اضافه شد 📚`);
+    }
+
+    function createNewCourseFromTab() {
+      const input = document.getElementById('newCourseNameInput');
+      const name = input.value.trim();
+      if (!name) return showToast('نام درس را وارد کنید');
+      const newCourse = { id: 'c_' + Date.now(), name, color: state.newCourseColor || 'purple', totalMinutes: 0 };
+      state.courses.push(newCourse);
+      state.selectedCourseId = newCourse.id;
+      input.value = '';
+      saveAppState(); renderAllUI();
+      showToast(`درس «${name}» اضافه شد ✨`);
+      switchCoursesSub('list', document.querySelector('#tab-courses .sub-pill'));
+    }
+
+    function deleteCourseById(id) {
+      if (state.courses.length <= 1) return showToast('حداقل ۱ درس باید باقی بماند');
+      state.courses = state.courses.filter(c => c.id !== id);
+      state.reviews = state.reviews.filter(r => r.courseId !== id);
+      if (state.selectedCourseId === id) state.selectedCourseId = state.courses[0].id;
+      saveAppState(); renderAllUI();
+      showToast('درس حذف شد');
+    }
+
+    function calculateExamPace() {
+      const pages = parseInt(document.getElementById('pacePagesInput').value, 10);
+      const days = parseInt(document.getElementById('paceDaysInput').value, 10);
+      const resBox = document.getElementById('paceResultBox');
+      if (!pages || !days || pages <= 0 || days <= 0) return showToast('مقادیر را به درستی وارد کنید');
+      const studyDays = Math.max(1, days - 3);
+      resBox.style.display = 'block';
+      resBox.innerHTML = days > 3
+        ? `📌 با کنار گذاشتن <b>۳ روز آخر برای مرور</b>، شما <b>${studyDays} روز</b> فرصت دارید.<br>🎯 سهمیه روزانه: روزی <b>${(pages / studyDays).toFixed(1)} صفحه</b> بخوانید!`
+        : `⚡ زمان فشرده است! روزانه <b>${(pages / days).toFixed(1)} صفحه</b> مطالعه کنید.`;
+    }
+
+    function updateMonthlyGoal() {
+      const val = parseInt(document.getElementById('newMonthlyGoalInput').value, 10);
+      if (!val || val < 5) return showToast('عددی بزرگتر از ۵ ساعت وارد کنید');
+      state.monthlyGoalHours = val;
+      document.getElementById('newMonthlyGoalInput').value = '';
+      saveAppState(); renderAllUI();
+      showToast('🎯 هدف ماهانه بروزرسانی شد!');
+    }
+
+    function exportUserDataJson() {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state));
+      const a = document.createElement('a');
+      a.setAttribute('href', dataStr);
+      a.setAttribute('download', `haftkhan_backup_${getTodayIso()}.json`);
+      document.body.appendChild(a); a.click(); a.remove();
+      showToast('📥 فایل پشتیبان دانلود شد');
+    }
+
+    function importUserDataJson(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const imported = JSON.parse(e.target.result);
+          if (imported && Array.isArray(imported.courses)) {
+            state = { ...state, ...imported };
+            saveAppState(); renderAllUI();
+            showToast('✅ اطلاعات پشتیبان بازیابی شد!');
+          }
+        } catch (err) { showToast('فایل معتبر نیست'); }
+      };
+      reader.readAsText(file);
+    }
+
+    function getCurrentMythTrial() {
+      return SEVEN_TRIALS.find(t => state.farr >= t.minFarr && state.farr < t.maxFarr) || SEVEN_TRIALS[SEVEN_TRIALS.length - 1];
+    }
+
+    function renderAllUI() {
+      document.getElementById('userGreetingTitle').textContent = state.userName ? `میز کارِ ${state.userName}` : 'سفرِ داناییِ تو';
+      try {
+        document.getElementById('todayPersianDate').textContent = new Intl.DateTimeFormat('fa-IR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).format(new Date());
+      } catch (e) {}
+
+      document.getElementById('headerStreakCount').textContent = state.streak;
+      document.getElementById('headerFeatherCount').textContent = state.feathers;
+      document.getElementById('headerFarrCount').textContent = state.farr;
+
+      renderCourseCustomDropdowns();
+      evaluateSimorghMessages();
+      renderWeekStripAndReviews();
+      renderMonthlyGoalSection();
+      renderCoursesTab();
+      renderMythAndStatsTab();
+    }
+
+    function renderWeekStripAndReviews() {
+      const today = getTodayIso();
+      document.getElementById('todayStudyMinutesBadge').textContent = `امروز: ${state.studyHistory[today] || 0} دقیقه`;
+      const strip = document.getElementById('weekStripContainer');
+      const dayNames = ['ی', 'د', 'س', 'چ', 'پ', 'ج', 'ش'];
+      let stripHtml = '';
+      for (let i = 6; i >= 0; i--) {
+        const dIso = addDaysIso(today, -i);
+        const parts = dIso.split('-').map(Number);
+        const dt = new Date(parts[0], parts[1] - 1, parts[2]);
+        let faDayNum = dt.getDate();
+        try { faDayNum = new Intl.DateTimeFormat('fa-IR', { day: 'numeric' }).format(dt); } catch (e) {}
+        stripHtml += `
+          <div class="week-day-item ${i === 0 ? 'today' : ''} ${(state.studyHistory[dIso] || 0) > 0 ? 'has-study' : ''}">
+            <span>${dayNames[dt.getDay()]}</span>
+            <div class="week-day-num">${faDayNum}</div>
+          </div>
+        `;
+      }
+      strip.innerHTML = stripHtml;
+
+      const dueList = state.reviews.filter(r => r.nextReviewDate <= today);
+      document.getElementById('dueReviewsCountBadge').textContent = `${dueList.length} مورد`;
+      const dueBox = document.getElementById('todayReviewsList');
+      dueBox.innerHTML = dueList.length === 0
+        ? `<div style="background:rgba(255,255,255,0.65); padding:12px; border-radius:14px; font-size:0.8rem; color:#7A2042; font-weight:600; text-align:center;">🎉 هیچ مرور عقب‌افتاده‌ای برای امروز نداری!</div>`
+        : dueList.map(r => `
+          <div style="background:#fff; padding:11px 14px; border-radius:14px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; gap:8px;">
+            <div>
+              <div style="font-size:0.83rem; font-weight:800;">${r.topic}</div>
+              <div style="font-size:0.72rem; color:var(--text-muted); font-weight:600;">📘 ${r.courseName} • پله مرور: ${r.stage + 1} از ۴</div>
+            </div>
+            <button type="button" class="btn-primary" style="flex:0 0 auto; padding:7px 12px; font-size:0.75rem; background:var(--pastel-mint-dark);" onclick="completeReviewStep('${r.id}')">مرور شد ✓</button>
+          </div>
+        `).join('');
+    }
+
+    function renderMonthlyGoalSection() {
+      const totalMins = Object.values(state.studyHistory).reduce((a, b) => a + b, 0);
+      const totalHours = (totalMins / 60).toFixed(1);
+      const pct = Math.min(100, Math.round(((totalMins / 60) / state.monthlyGoalHours) * 100));
+      document.getElementById('monthlyGoalTitleText').textContent = `${totalHours} از ${state.monthlyGoalHours} ساعت`;
+      document.getElementById('goalPercentText').textContent = `${pct}%`;
+      document.getElementById('goalRingVisual').style.background = `conic-gradient(var(--pastel-purple-dark) ${pct}%, #ECEAF5 ${pct}%)`;
+
+      const today = getTodayIso();
+      let last7Mins = 0;
+      for (let i = 0; i < 7; i++) last7Mins += (state.studyHistory[addDaysIso(today, -i)] || 0);
+      const suggestedHours = last7Mins > 60 ? Math.max(15, Math.round(((last7Mins / 7) * 30 * 1.15) / 60)) : state.monthlyGoalHours;
+      document.getElementById('monthlySmartSuggestionText').textContent = `💡 پیشنهاد هوشمند بر اساس ریتم هفتگی تو: ${suggestedHours} ساعت در این ماه`;
+    }
+
+    function renderCoursesTab() {
+      const bgMap = {
+        purple: { bg: '#EAE4FF', icon: '📐', text: '#2D264B' },
+        mint: { bg: '#E0F5EE', icon: '🧬', text: '#164E3B' },
+        pink: { bg: '#FFE8F0', icon: '📖', text: '#7A2042' },
+        blue: { bg: '#E3F0FF', icon: '⚡', text: '#1E3A8A' }
+      };
+      document.getElementById('coursesGridContainer').innerHTML = state.courses.map(c => {
+        const theme = bgMap[c.color] || bgMap.purple;
+        return `
+          <div class="course-tile" style="background:${theme.bg}; color:${theme.text};">
+            <button class="course-delete-btn" onclick="deleteCourseById('${c.id}')">✕</button>
+            <div>
+              <div class="course-icon-badge">${theme.icon}</div>
+              <h4 class="font-extrabold" style="font-size:0.95rem; margin-bottom:3px;">${c.name}</h4>
+              <span style="font-size:0.75rem; font-weight:700; opacity:0.85;">${c.totalMinutes} دقیقه (${(c.totalMinutes / 60).toFixed(1)} ساعت)</span>
+            </div>
+            <div style="margin-top:12px; font-size:0.74rem; font-weight:800;">
+              <span style="cursor:pointer;" onclick="selectActiveCourse('${c.id}'); switchMainTab('home', document.querySelector('.floating-nav .nav-btn'));">شروع مطالعه ←</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      const archiveBox = document.getElementById('allReviewsArchiveList');
+      archiveBox.innerHTML = state.reviews.length === 0
+        ? `<p style="font-size:0.8rem; color:var(--text-muted); text-align:center;">هنوز مبحثی در چرخه مرور ثبت نشده است.</p>`
+        : state.reviews.map(r => `
+          <div style="padding:10px 12px; border-radius:12px; background:#F8F7FC; margin-bottom:6px; display:flex; justify-content:space-between; align-items:center; font-size:0.8rem;">
+            <div><b>${r.topic}</b> <span style="color:var(--text-muted);">(${r.courseName})</span></div>
+            <span style="font-size:0.72rem; font-weight:800; color:var(--pastel-purple-dark);">موعد: ${r.nextReviewDate}</span>
+          </div>
+        `).join('');
+    }
+
+    function renderMythAndStatsTab() {
+      const currentTrial = getCurrentMythTrial();
+      document.getElementById('currentMythRankTitle').textContent = currentTrial.name;
+      document.getElementById('currentMythRankDesc').textContent = currentTrial.desc;
+      const pct = Math.min(100, Math.max(4, Math.round(((state.farr - currentTrial.minFarr) / (currentTrial.maxFarr - currentTrial.minFarr)) * 100)));
+      document.getElementById('mythLevelProgressBar').style.width = `${pct}%`;
+      document.getElementById('mythFarrCurrentLabel').textContent = `${state.farr} فرّ ایزدی`;
+      document.getElementById('mythFarrNextLabel').textContent = currentTrial.level < 7 ? `خوان بعدی: ${currentTrial.maxFarr} فرّ` : 'قله نهایی فتح شد!';
+
+      document.getElementById('sevenTrialsListContainer').innerHTML = SEVEN_TRIALS.map(t => {
+        const unlocked = state.farr >= t.minFarr;
+        return `
+          <div style="padding:12px; border-radius:16px; margin-bottom:8px; border:1.5px solid ${unlocked ? '#D6CBFF' : 'var(--border-soft)'}; background:${unlocked ? '#F6F3FF' : '#FAFAFC'}; opacity:${unlocked ? '1' : '0.6'}; display:flex; justify-content:space-between; align-items:center; gap:10px;">
+            <div>
+              <div style="font-size:0.85rem; font-weight:800;">${unlocked ? '✅' : '🔒'} ${t.name}</div>
+              <div style="font-size:0.74rem; color:var(--text-muted); margin-top:2px;">${t.desc}</div>
+            </div>
+            <span style="font-size:0.72rem; font-weight:800; color:var(--pastel-purple-dark); white-space:nowrap;">${t.minFarr}+ فرّ</span>
+          </div>
+        `;
+      }).join('');
+
+      const totalAllMins = state.courses.reduce((a, c) => a + c.totalMinutes, 0);
+      document.getElementById('totalAllTimeHoursBadge').textContent = `کل: ${(totalAllMins / 60).toFixed(1)} ساعت`;
+      const maxCourseMins = Math.max(60, ...state.courses.map(c => c.totalMinutes));
+      document.getElementById('coursesBarChartContainer').innerHTML = state.courses.map(c => `
+        <div style="margin-bottom:12px;">
+          <div style="display:flex; justify-content:space-between; font-size:0.8rem; font-weight:700; margin-bottom:4px;">
+            <span>${c.name}</span>
+            <span style="color:var(--pastel-purple-dark);">${c.totalMinutes} دقیقه</span>
+          </div>
+          <div style="height:10px; background:#F0EEF8; border-radius:99px; overflow:hidden;">
+            <div style="height:100%; width:${Math.round((c.totalMinutes / maxCourseMins) * 100)}%; background:var(--pastel-purple-dark); border-radius:99px;"></div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function switchMainTab(tabName, btnEl) {
+      document.querySelectorAll('.tab-page').forEach(p => p.classList.remove('active'));
+      document.getElementById('tab-' + tabName).classList.add('active');
+      document.querySelectorAll('.floating-nav .nav-btn').forEach(b => b.classList.remove('active'));
+      if (btnEl) btnEl.classList.add('active');
+      state.telemetry.tabClicks[tabName] = (state.telemetry.tabClicks[tabName] || 0) + 1;
+      saveAppState();
+    }
+
+    function switchHomeSub(sub, btnEl) {
+      document.querySelectorAll('#tab-home .sub-section').forEach(s => s.classList.remove('active'));
+      document.getElementById('home-sub-' + sub).classList.add('active');
+      document.querySelectorAll('#tab-home .sub-pill').forEach(b => b.classList.remove('active'));
+      btnEl.classList.add('active');
+    }
+
+    function switchCoursesSub(sub, btnEl) {
+      document.querySelectorAll('#tab-courses .sub-section').forEach(s => s.classList.remove('active'));
+      document.getElementById('courses-sub-' + sub).classList.add('active');
+      document.querySelectorAll('#tab-courses .sub-pill').forEach(b => b.classList.remove('active'));
+      btnEl.classList.add('active');
+    }
+
+    function switchStatsSub(sub, btnEl) {
+      document.querySelectorAll('#tab-stats .sub-section').forEach(s => s.classList.remove('active'));
+      document.getElementById('stats-sub-' + sub).classList.add('active');
+      document.querySelectorAll('#tab-stats .sub-pill').forEach(b => b.classList.remove('active'));
+      btnEl.classList.add('active');
+    }
+
+    function showToast(msg) {
+      const box = document.getElementById('toastBox');
+      box.textContent = msg;
+      box.classList.add('show');
+      setTimeout(() => box.classList.remove('show'), 2800);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      loadAppState();
+      checkOfflineDailyStreak();
+      generateMegaPromptPreview();
+      renderAllUI();
+      checkOnboardingStatus();
+    });
+  </script>
+</body>
+</html>

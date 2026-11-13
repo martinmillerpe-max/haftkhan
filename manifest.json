@@ -1,0 +1,25 @@
+{
+  "name": "هفت‌خوان دانایی | داشبورد هوشمند مطالعه",
+  "short_name": "هفت‌خوان",
+  "description": "داشبورد هوشمند برنامه‌ریزی درسی، مرور ضد فراموشی و پرامپت‌ساز هوش مصنوعی",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#F4F3F8",
+  "theme_color": "#7B61FF",
+  "orientation": "portrait",
+  "dir": "rtl",
+  "lang": "fa-IR",
+  "icons": [
+    {
+      "src": "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f99a.png",
+      "sizes": "72x72",
+      "type": "image/png"
+    },
+    {
+      "src": "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f99a.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
