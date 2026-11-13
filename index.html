@@ -100,7 +100,6 @@
     .stat-pill.feather { color: var(--pastel-purple-dark); background: #F5F2FF; border-color: #E4DDFD; }
     .stat-pill.farr { color: #CA8A04; background: #FEFCE8; border-color: #FEF08A; }
 
-    /* بنر نصب وب‌اپلیکیشن (PWA) */
     .pwa-install-banner {
       display: none;
       background: #26252B;
@@ -429,7 +428,7 @@
     </div>
   </div>
 
-  <!-- ۴. مودال راهنمای ۳ آیکون بالا (سبک دولینگو + تقویم ۳۶۵ مربعی زنجیره) -->
+  <!-- ۴. مودال راهنمای ۳ آیکون بالا -->
   <div id="topStatModal" class="modal-backdrop" onclick="if(event.target===this) closeTopStatModal()">
     <div class="modal-sheet" id="topStatModalContent"></div>
   </div>
@@ -437,7 +436,6 @@
   <!-- بدنه اصلی داشبورد -->
   <div class="app-shell">
     
-    <!-- بنر هوشمند نصب وب‌اپلیکیشن (PWA) -->
     <div id="pwaInstallBanner" class="pwa-install-banner">
       <div style="font-size:0.78rem; font-weight:700;">
         📲 نصب «هفت‌خوان» روی صفحه اصلی گوشی (اجرای تمام‌صفحه و آفلاین)
@@ -467,7 +465,6 @@
       </div>
     </header>
 
-    <!-- اسلایدر خودکار پیام‌های سیمرغ دانا -->
     <section class="simorgh-card" id="simorghCardBox">
       <div class="simorgh-top">
         <div class="simorgh-avatar">🦚</div>
@@ -787,7 +784,6 @@
         </div>
       </div>
 
-      <!-- فرم ارسال مستقیم فیدبک و گزارش باگ به تب دوم گوگل‌شیت -->
       <div id="stats-sub-feedback" class="sub-section">
         <div class="bento-card pink">
           <div class="card-head">
@@ -854,9 +850,9 @@
        تنظیمات اختصاصی مدیر محصول (شماره کارت، مبلغ، آیدی تلگرام و لینک گوگل‌شیت)
        ============================================================================ */
     const ADMIN_CONFIG = {
-      GOOGLE_SHEET_URL: "https://script.google.com/macros/s/AKfycbzUQzLz5Jxu2g2vNulup0hl6OC9hr7GjjxckDcnaa9ioh8F8jDi33hqO84CGKF6Dsoy2w/exec", // لینک اسکریپت گوگل‌شیت را اینجا بگذارید
+      GOOGLE_SHEET_URL: "https://script.google.com/macros/s/AKfycbwcm3XctaUCgWmjNbSLB3YcF_vWBeIoviaSuf2GbETqZLGGGuCpghmrWtEqXZMcuHA7YA/exec", // لینک جدید اسکریپت گوگل‌شیت را اینجا بگذارید
       SUBSCRIPTION_PRICE: "399,000 تومان",
-      BANK_CARD_NUMBER: "6219-8614-8979-2191",
+      BANK_CARD_NUMBER: "6219861489792191",
       BANK_CARD_OWNER: "به نام: مهدی قاسمی",
       ADMIN_TELEGRAM_ID: "usernameoffi", // بدون علامت @
       TRIAL_DAYS: 7
@@ -879,7 +875,7 @@
       userName: '',
       userPhone: '',
       deviceId: '',
-      accountStatus: 'Trial', // Trial | VIP | Blocked
+      accountStatus: 'Trial',
       installDate: getTodayIso(),
       farr: 0,
       feathers: 1,
@@ -916,7 +912,20 @@
       return `${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, '0')}-${String(dt.getDate()).padStart(2, '0')}`;
     }
 
-    // تولید شناسه یکتا برای دستگاه جهت قفل تک‌کاربره و ضدتقلب
+    function toEnglishDigits(str) {
+      if (!str) return "";
+      return String(str)
+        .replace(/[۰-۹]/g, d => "۰۱۲۳۴۵۶۷۸۹".indexOf(d))
+        .replace(/[٠-٩]/g, d => "٠١٢٣٤٥٦٧٨٩".indexOf(d));
+    }
+
+    function normalizeClientPhone(p) {
+      let s = toEnglishDigits(p).replace(/\D/g, "");
+      if (s.length === 10 && s.startsWith("9")) s = "0" + s;
+      if (s.startsWith("98") && s.length === 12) s = "0" + s.slice(2);
+      return s;
+    }
+
     function ensureDeviceId() {
       if (!state.deviceId) {
         let savedDev = localStorage.getItem('hk_device_fingerprint');
@@ -943,15 +952,39 @@
     }
 
     /* ============================================================================
-       بررسی دوره ۷ روزه رایگان، ارتباط با گوگل‌شیت و صفحه کارت‌به‌کارت
+       بررسی امن دوره ۷ روزه، قفل تک‌کاربره و جلوگیری از گیر کردن روی فیلترشکن
        ============================================================================ */
     function isTrialExpiredLocally() {
       if (state.accountStatus === 'VIP') return false;
       if (state.accountStatus === 'Blocked') return true;
-      const startMs = new Date(state.installDate).getTime();
-      const nowMs = new Date(getTodayIso()).getTime();
-      const diffDays = Math.floor((nowMs - startMs) / (1000 * 60 * 60 * 24));
+
+      if (!state.installDate || !/^\d{4}-\d{2}-\d{2}$/.test(String(state.installDate))) {
+        state.installDate = getTodayIso();
+        saveAppState();
+        return false;
+      }
+
+      const p1 = state.installDate.split('-').map(Number);
+      const p2 = getTodayIso().split('-').map(Number);
+      const d1 = Date.UTC(p1[0], p1[1] - 1, p1[2]);
+      const d2 = Date.UTC(p2[0], p2[1] - 1, p2[2]);
+      const diffDays = Math.floor((d2 - d1) / (1000 * 60 * 60 * 24));
+
+      if (isNaN(diffDays) || diffDays < 0) return false;
       return diffDays >= ADMIN_CONFIG.TRIAL_DAYS;
+    }
+
+    async function fetchWithTimeout(url, options, timeoutMs = 5000) {
+      const controller = new AbortController();
+      const id = setTimeout(() => controller.abort(), timeoutMs);
+      try {
+        const response = await fetch(url, { ...options, signal: controller.signal });
+        clearTimeout(id);
+        return response;
+      } catch (err) {
+        clearTimeout(id);
+        throw err;
+      }
     }
 
     function checkSubscriptionGate() {
@@ -961,7 +994,6 @@
       } else {
         document.getElementById('paywallModal').classList.remove('show');
       }
-      // همگام‌سازی در پس‌زمینه با گوگل‌شیت در صورت اتصال به اینترنت
       if (navigator.onLine) {
         verifySubscriptionWithServer(false);
       }
@@ -991,11 +1023,11 @@
 
     async function verifySubscriptionWithServer(isManualCheck) {
       if (!ADMIN_CONFIG.GOOGLE_SHEET_URL || ADMIN_CONFIG.GOOGLE_SHEET_URL.includes("PASTE_YOUR")) {
-        if (isManualCheck) showToast('لینک سرور گوگل‌شیت هنوز در تنظیمات قرار نگرفته است');
+        if (isManualCheck) showToast('لینک سرور گوگل‌شیت هنوز تنظیم نشده است');
         return;
       }
       if (!navigator.onLine) {
-        if (isManualCheck) showToast('لطفاً اینترنت خود را روشن کنید و دوباره بزنید');
+        if (isManualCheck) showToast('لطفاً اینترنت خود را روشن کنید و دوباره تلاش کنید');
         return;
       }
 
@@ -1005,7 +1037,7 @@
       const totalMins = Object.values(state.studyHistory).reduce((a, b) => a + b, 0);
       const payload = {
         action: 'sync',
-        phone: state.userPhone,
+        phone: normalizeClientPhone(state.userPhone),
         userName: state.userName,
         deviceId: state.deviceId,
         device: /Mobi|Android|iPhone/i.test(navigator.userAgent) ? 'Mobile' : 'Desktop',
@@ -1024,14 +1056,14 @@
       };
 
       try {
-        const res = await fetch(ADMIN_CONFIG.GOOGLE_SHEET_URL, {
+        const res = await fetchWithTimeout(ADMIN_CONFIG.GOOGLE_SHEET_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'text/plain;charset=utf-8' },
           body: JSON.stringify(payload)
-        });
+        }, 6000);
         const data = await res.json();
 
-        if (data.error === 'DEVICE_LOCKED') {
+        if (data.error === 'DEVICE_LOCKED' || data.error === 'MULTI_ACCOUNT_BLOCKED') {
           state.accountStatus = 'Blocked';
           saveAppState();
           showPaywallModal();
@@ -1041,27 +1073,26 @@
 
         if (data.ok) {
           state.accountStatus = data.status || state.accountStatus;
-          if (data.installDate) state.installDate = data.installDate;
+          if (data.installDate && /^\d{4}-\d{2}-\d{2}$/.test(String(data.installDate))) {
+            state.installDate = data.installDate;
+          }
           saveAppState();
 
           if (state.accountStatus === 'VIP' || !data.expired) {
             document.getElementById('paywallModal').classList.remove('show');
-            if (isManualCheck) showToast('🎉 تبریک! اشتراک دائمی (VIP) شما فعال شد!');
+            if (isManualCheck) showToast('🎉 تبریک! اشتراک شما فعال است!');
           } else {
             showPaywallModal();
-            if (isManualCheck) showToast('هنوز وضعیت شما در سیستم VIP نشده است. پس از ارسال فیش صبر کنید.');
+            if (isManualCheck) showToast('هنوز وضعیت شما در سیستم VIP نشده است.');
           }
         }
       } catch (err) {
-        if (isManualCheck) showToast('خطا در ارتباط با سرور؛ دوباره تلاش کنید');
+        if (isManualCheck) showToast('عدم پاسخ از سرور گوگل (در صورت نیاز فیلترشکن را روشن کنید)');
       } finally {
         if (isManualCheck && btn) btn.textContent = '🔄 واریز کردم؛ بررسی و باز کردن قفل';
       }
     }
 
-    /* ============================================================================
-       ارسال مستقیم فیدبک به شیت دوم (Feedbacks) در گوگل‌شیت
-       ============================================================================ */
     function selectFbCategory(val, label, el) {
       selectedFeedbackCategory = val;
       document.getElementById('fbCategorySelectedLabel').textContent = label;
@@ -1081,18 +1112,18 @@
 
       try {
         if (ADMIN_CONFIG.GOOGLE_SHEET_URL && !ADMIN_CONFIG.GOOGLE_SHEET_URL.includes("PASTE_YOUR")) {
-          await fetch(ADMIN_CONFIG.GOOGLE_SHEET_URL, {
+          await fetchWithTimeout(ADMIN_CONFIG.GOOGLE_SHEET_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'text/plain;charset=utf-8' },
             body: JSON.stringify({
               action: 'feedback',
-              phone: state.userPhone,
+              phone: normalizeClientPhone(state.userPhone),
               userName: state.userName,
               category: selectedFeedbackCategory,
               message: message,
               device: /Mobi|Android|iPhone/i.test(navigator.userAgent) ? 'Mobile' : 'Desktop'
             })
-          });
+          }, 5000);
         }
         msgInput.value = '';
         showToast('❤️ ممنون! پیام شما مستقیم در سیستم ثبت شد');
@@ -1103,9 +1134,7 @@
       }
     }
 
-    /* ============================================================================
-       وب‌اپلیکیشن قابل نصب (PWA Service Worker & Install Prompt)
-       ============================================================================ */
+    /* وب‌اپلیکیشن قابل نصب (PWA) */
     let deferredPwaPrompt = null;
 
     if ('serviceWorker' in navigator) {
@@ -1129,9 +1158,6 @@
       });
     }
 
-    /* ============================================================================
-       سایر توابع اصلی داشبورد (آنبوردینگ، سیمرغ، تایمر، مرور و آمار)
-       ============================================================================ */
     const PASTEL_PALETTE = ['purple', 'mint', 'pink', 'blue'];
 
     function checkOfflineDailyStreak() {
@@ -1194,11 +1220,14 @@
 
     async function finishOnboarding() {
       const nameVal = document.getElementById('onboardName').value.trim();
-      const phoneVal = document.getElementById('onboardPhone').value.trim();
-      const dailyHours = parseFloat(document.getElementById('onboardDailyHours').value) || 3;
+      const rawPhone = document.getElementById('onboardPhone').value.trim();
+      const phoneVal = normalizeClientPhone(rawPhone);
+      const dailyHours = parseFloat(toEnglishDigits(document.getElementById('onboardDailyHours').value)) || 3;
 
       if (!nameVal) return showToast('لطفاً نام خود را وارد کنید');
-      if (!phoneVal || phoneVal.length < 10) return showToast('لطفاً شماره موبایل معتبر وارد کنید');
+      if (!phoneVal || phoneVal.length !== 11 || !phoneVal.startsWith('09')) {
+        return showToast('لطفاً شماره موبایل ۱۱ رقمی معتبر وارد کنید (مثلاً 0912...)');
+      }
 
       const pendingCourse = document.getElementById('onboardCourseInput').value.trim();
       if (pendingCourse && onboardingTempCourses.length === 0) {
@@ -1206,22 +1235,68 @@
       }
       if (onboardingTempCourses.length === 0) return showToast('لطفاً حداقل ۱ درس اضافه کنید!');
 
+      ensureDeviceId();
+      const btn = document.getElementById('onboardSubmitBtn');
+      const oldBtnText = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = 'در حال بررسی و ساخت حساب اختصاصی... ⏳';
+
+      if (ADMIN_CONFIG.GOOGLE_SHEET_URL && !ADMIN_CONFIG.GOOGLE_SHEET_URL.includes("PASTE_YOUR") && navigator.onLine) {
+        try {
+          const res = await fetchWithTimeout(ADMIN_CONFIG.GOOGLE_SHEET_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({
+              action: 'sync',
+              phone: phoneVal,
+              userName: nameVal,
+              deviceId: state.deviceId,
+              device: /Mobi|Android|iPhone/i.test(navigator.userAgent) ? 'Mobile' : 'Desktop'
+            })
+          }, 5500);
+
+          const serverData = await res.json();
+
+          if (serverData.error === 'DEVICE_LOCKED' || serverData.error === 'MULTI_ACCOUNT_BLOCKED') {
+            btn.disabled = false;
+            btn.textContent = oldBtnText;
+            alert(serverData.msg);
+            return;
+          }
+
+          if (serverData.ok) {
+            state.accountStatus = serverData.status || 'Trial';
+            if (serverData.installDate && /^\d{4}-\d{2}-\d{2}$/.test(serverData.installDate)) {
+              state.installDate = serverData.installDate;
+            } else {
+              state.installDate = getTodayIso();
+            }
+          }
+        } catch (netErr) {
+          state.installDate = getTodayIso();
+          state.accountStatus = 'Trial';
+        }
+      } else {
+        state.installDate = getTodayIso();
+        state.accountStatus = 'Trial';
+      }
+
       state.userName = nameVal;
       state.userPhone = phoneVal;
       state.monthlyGoalHours = Math.round(dailyHours * 30);
       state.courses = [...onboardingTempCourses];
       state.selectedCourseId = state.courses[0].id;
-      state.installDate = getTodayIso();
       state.onboarded = true;
       saveAppState();
 
+      btn.disabled = false;
+      btn.textContent = oldBtnText;
       document.getElementById('onboardingModal').classList.remove('show');
       renderAllUI();
-      showToast(`خوش آمدی ${state.userName}! ۷ روز رایگان تو آغاز شد ⚔️`);
       checkSubscriptionGate();
+      showToast(`خوش آمدی ${state.userName}! ۷ روز رایگان تو آغاز شد ⚔️`);
     }
 
-    /* اسلایدر هوشمند پیام‌های سیمرغ */
     let activeSimorghMessages = [];
     let currentSimorghSlideIndex = 0;
     let simorghCarouselInterval = null;
@@ -1364,7 +1439,6 @@
       document.getElementById('courseColorSelectWrap').classList.remove('open');
     }
 
-    /* تایمر و ثبت مطالعه */
     let timerSeconds = 25 * 60;
     let timerInitialSeconds = 25 * 60;
     let isStopwatchMode = false;
@@ -1436,7 +1510,7 @@
 
     function submitManualStudy() {
       if (state.courses.length === 0) return showToast('ابتدا یک درس اضافه کنید!');
-      const mins = parseInt(document.getElementById('manualMinutesInput').value, 10);
+      const mins = parseInt(toEnglishDigits(document.getElementById('manualMinutesInput').value), 10);
       if (!mins || mins <= 0) return showToast('مدت زمان مطالعه را به دقیقه وارد کنید');
       document.getElementById('manualMinutesInput').value = '';
       state.telemetry.manualSessions++;
@@ -1600,7 +1674,6 @@
       return html;
     }
 
-    /* صدای تمرکز آفلاین */
     let audioCtx = null, activeAudioNode = null, soundPlaying = false, selectedSoundType = 'rain';
 
     function selectSoundOption(type, label, el) {
@@ -1654,7 +1727,6 @@
       document.getElementById('soundToggleBtn').textContent = 'پخش صدای تمرکز 🔊';
     }
 
-    /* پرامپت‌ساز هوش مصنوعی */
     let currentAiLevel = 'دبیرستان و کنکور', currentAiTemplate = 'feynman';
 
     function selectAiLevel(val, label, el) {
@@ -1733,8 +1805,8 @@
     }
 
     function calculateExamPace() {
-      const pages = parseInt(document.getElementById('pacePagesInput').value, 10);
-      const days = parseInt(document.getElementById('paceDaysInput').value, 10);
+      const pages = parseInt(toEnglishDigits(document.getElementById('pacePagesInput').value), 10);
+      const days = parseInt(toEnglishDigits(document.getElementById('paceDaysInput').value), 10);
       const resBox = document.getElementById('paceResultBox');
       if (!pages || !days || pages <= 0 || days <= 0) return showToast('مقادیر را به درستی وارد کنید');
       const studyDays = Math.max(1, days - 3);
@@ -1745,7 +1817,7 @@
     }
 
     function updateMonthlyGoal() {
-      const val = parseInt(document.getElementById('newMonthlyGoalInput').value, 10);
+      const val = parseInt(toEnglishDigits(document.getElementById('newMonthlyGoalInput').value), 10);
       if (!val || val < 5) return showToast('عددی بزرگتر از ۵ ساعت وارد کنید');
       state.monthlyGoalHours = val;
       document.getElementById('newMonthlyGoalInput').value = '';
